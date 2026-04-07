@@ -1063,7 +1063,96 @@
         }
       },
       "write": {
-        "status": "not_decoded"
+        "command": "0x41",
+        "payload_model": "00 01 05 41 <output_channel> <input_index> <gain_u16le>",
+        "output_channels": {
+          "Out1": "0x04",
+          "Out2": "0x05",
+          "Out3": "0x06",
+          "Out4": "0x07",
+          "Out5": "0x08",
+          "Out6": "0x09",
+          "Out7": "0x0A",
+          "Out8": "0x0B"
+        },
+        "input_indices": {
+          "InA": "0x00",
+          "InB": "0x01",
+          "InC": "0x02",
+          "InD": "0x03"
+        },
+        "predicted_full_write_map": {
+          "Out1": {
+            "InA": "00 01 05 41 04 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 04 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 04 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 04 03 <gain_lo> <gain_hi>"
+          },
+          "Out2": {
+            "InA": "00 01 05 41 05 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 05 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 05 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 05 03 <gain_lo> <gain_hi>"
+          },
+          "Out3": {
+            "InA": "00 01 05 41 06 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 06 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 06 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 06 03 <gain_lo> <gain_hi>"
+          },
+          "Out4": {
+            "InA": "00 01 05 41 07 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 07 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 07 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 07 03 <gain_lo> <gain_hi>"
+          },
+          "Out5": {
+            "InA": "00 01 05 41 08 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 08 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 08 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 08 03 <gain_lo> <gain_hi>"
+          },
+          "Out6": {
+            "InA": "00 01 05 41 09 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 09 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 09 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 09 03 <gain_lo> <gain_hi>"
+          },
+          "Out7": {
+            "InA": "00 01 05 41 0A 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 0A 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 0A 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 0A 03 <gain_lo> <gain_hi>"
+          },
+          "Out8": {
+            "InA": "00 01 05 41 0B 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 0B 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 0B 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 0B 03 <gain_lo> <gain_hi>"
+          }
+        },
+        "value_model": "u16le",
+        "observations": [
+          "Out1 <- InB gain write observed as 00 01 05 41 04 01 17 01",
+          "Out1 <- InB gain write observed as 00 01 05 41 04 01 0E 01",
+          "Out1 <- InA gain write observed as 00 01 05 41 04 00 0E 01",
+          "Out8 <- InD gain write observed as 00 01 05 41 0B 03 0E 01",
+          "Out1 <- InA gain at -20.0 dB was observed as 00 01 05 41 04 00 50 00 (raw 80)",
+          "Out1 <- InA gain at -60.0 dB was observed as 00 01 05 41 04 00 00 00 (raw 0)",
+          "Out1 <- InB gain at -28.0 dB was observed as 00 01 05 41 04 01 40 00 (raw 64)",
+          "Out1 <- InB gain at -30.0 dB was observed as 00 01 05 41 04 01 3C 00 (raw 60)"
+        ],
+        "examples": {
+          "0.0dB_raw": 280,
+          "-0.1dB_raw": 279,
+          "-1.0dB_raw": 270,
+          "-20.0dB_raw": 80,
+          "-28.0dB_raw": 64,
+          "-30.0dB_raw": 60,
+          "-60.0dB_raw": 0
+        },
+        "inference": "Matrix crosspoint gain uses input index (0=InA,1=InB,2=InC,3=InD) rather than input bit mask. Gain value is a u16le at bytes 6..7. The exact raw-to-dB curve is not fully decoded yet; current observations securely establish several anchor points including 0.0 dB => 280, -1.0 dB => 270, -20.0 dB => 80, -28.0 dB => 64, -30.0 dB => 60 and -60.0 dB => 0.",
+        "status": "observed"
       },
       "read": {
         "status": "observed_partial",
@@ -1311,7 +1400,75 @@
         }
       },
       "read": {
-        "status": "not_decoded"
+        "value_model": "same_input_mask_as_write",
+        "stored_values": {
+          "InA": "0x01",
+          "InB": "0x02",
+          "InC": "0x04",
+          "InD": "0x08"
+        },
+        "locations": [
+          {
+            "output": "Out1",
+            "block_hex": "0B",
+            "offset_dec": 39,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out2",
+            "block_hex": "0D",
+            "offset_dec": 43,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out3",
+            "block_hex": "0F",
+            "offset_dec": 47,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out4",
+            "block_hex": "11",
+            "offset_dec": 51,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out5",
+            "block_hex": "14",
+            "offset_dec": 5,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out6",
+            "block_hex": "16",
+            "offset_dec": 9,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out7",
+            "block_hex": "18",
+            "offset_dec": 13,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out8",
+            "block_hex": "1A",
+            "offset_dec": 17,
+            "observed_by_diff": true
+          }
+        ],
+        "observations": [
+          "Out1 InA vs InC changed block 0x0B offset 39 from 0x01 to 0x04",
+          "Out2 InA vs InC changed block 0x0D offset 43 from 0x01 to 0x04",
+          "Out3 InA vs InC changed block 0x0F offset 47 from 0x01 to 0x04",
+          "Out4 InA vs InC changed block 0x11 offset 51 from 0x01 to 0x04",
+          "Out5 InA vs InC changed block 0x14 offset 5 from 0x01 to 0x04",
+          "Out6 InA vs InC changed block 0x16 offset 9 from 0x01 to 0x04",
+          "Out7 InA vs InC changed block 0x18 offset 13 from 0x01 to 0x04",
+          "Out8 InA vs InC changed block 0x1A offset 17 from 0x01 to 0x04"
+        ],
+        "inference": "The routing read layout is split into two output groups. Out1..Out4 use blocks 0x0B/0x0D/0x0F/0x11 with offsets 39/43/47/51. Out5..Out8 use blocks 0x14/0x16/0x18/0x1A with offsets 5/9/13/17. In both groups the stored byte equals the same input mask used on write-side.",
+        "status": "observed"
       }
     },
     "delay": {
@@ -1386,10 +1543,202 @@
         "value_model": "gate"
       },
       "write": {
-        "status": "not_decoded"
+        "command": "0x41",
+        "payload_model": "00 01 05 41 <output_channel> <input_index> <gain_u16le>",
+        "output_channels": {
+          "Out1": "0x04",
+          "Out2": "0x05",
+          "Out3": "0x06",
+          "Out4": "0x07",
+          "Out5": "0x08",
+          "Out6": "0x09",
+          "Out7": "0x0A",
+          "Out8": "0x0B"
+        },
+        "input_indices": {
+          "InA": "0x00",
+          "InB": "0x01",
+          "InC": "0x02",
+          "InD": "0x03"
+        },
+        "predicted_full_write_map": {
+          "Out1": {
+            "InA": "00 01 05 41 04 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 04 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 04 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 04 03 <gain_lo> <gain_hi>"
+          },
+          "Out2": {
+            "InA": "00 01 05 41 05 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 05 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 05 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 05 03 <gain_lo> <gain_hi>"
+          },
+          "Out3": {
+            "InA": "00 01 05 41 06 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 06 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 06 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 06 03 <gain_lo> <gain_hi>"
+          },
+          "Out4": {
+            "InA": "00 01 05 41 07 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 07 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 07 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 07 03 <gain_lo> <gain_hi>"
+          },
+          "Out5": {
+            "InA": "00 01 05 41 08 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 08 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 08 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 08 03 <gain_lo> <gain_hi>"
+          },
+          "Out6": {
+            "InA": "00 01 05 41 09 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 09 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 09 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 09 03 <gain_lo> <gain_hi>"
+          },
+          "Out7": {
+            "InA": "00 01 05 41 0A 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 0A 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 0A 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 0A 03 <gain_lo> <gain_hi>"
+          },
+          "Out8": {
+            "InA": "00 01 05 41 0B 00 <gain_lo> <gain_hi>",
+            "InB": "00 01 05 41 0B 01 <gain_lo> <gain_hi>",
+            "InC": "00 01 05 41 0B 02 <gain_lo> <gain_hi>",
+            "InD": "00 01 05 41 0B 03 <gain_lo> <gain_hi>"
+          }
+        },
+        "value_model": "u16le",
+        "examples": {
+          "0.0dB_raw": 280,
+          "-0.1dB_raw": 279,
+          "-1.0dB_raw": 270,
+          "-20.0dB_raw": 80,
+          "-28.0dB_raw": 64,
+          "-30.0dB_raw": 60,
+          "-60.0dB_raw": 0
+        },
+        "observations": [
+          "Out1 <- InB gain write observed as 00 01 05 41 04 01 17 01",
+          "Out1 <- InB gain write observed as 00 01 05 41 04 01 0E 01",
+          "Out1 <- InA gain write observed as 00 01 05 41 04 00 0E 01",
+          "Out8 <- InD gain write observed as 00 01 05 41 0B 03 0E 01",
+          "Out1 <- InA gain at -20.0 dB was observed as 00 01 05 41 04 00 50 00 (raw 80)",
+          "Out1 <- InA gain at -60.0 dB was observed as 00 01 05 41 04 00 00 00 (raw 0)",
+          "Out1 <- InB gain at -28.0 dB was observed as 00 01 05 41 04 01 40 00 (raw 64)",
+          "Out1 <- InB gain at -30.0 dB was observed as 00 01 05 41 04 01 3C 00 (raw 60)",
+          "The GUI showed the scripted all-crosspoint test pattern correctly for all outputs: InA=0.0 dB, InB=-1.0 dB, InC=-20.0 dB, InD=-30.0 dB"
+        ],
+        "inference": "Matrix crosspoint gain uses input index (0=InA,1=InB,2=InC,3=InD) rather than input bit mask. Gain value is a u16le at bytes 6..7. The exact raw-to-dB curve is not fully decoded yet; current observations securely establish several anchor points including 0.0 dB => 280, -1.0 dB => 270, -20.0 dB => 80, -28.0 dB => 64, -30.0 dB => 60 and -60.0 dB => 0.",
+        "status": "observed_strong"
       },
       "read": {
-        "status": "not_decoded"
+        "value_model": "u16le",
+        "stored_values": "same raw gain model as write-side",
+        "observed_locations": [
+          {
+            "output": "Out1",
+            "input": "InB",
+            "block_hex": "0B",
+            "offset_dec": 43,
+            "examples": {
+              "-1.0dB_raw": 270,
+              "-30.0dB_raw": 60
+            }
+          },
+          {
+            "output": "Out3",
+            "input": "InD",
+            "block_hex": "10",
+            "offset_dec": 5,
+            "examples": {
+              "0.0dB_raw": 280,
+              "-30.0dB_raw": 60
+            }
+          },
+          {
+            "output": "Out4",
+            "input": "InB",
+            "block_hex": "12",
+            "offset_dec": 5,
+            "examples": {
+              "-1.0dB_raw": 270,
+              "-30.0dB_raw": 60
+            }
+          },
+          {
+            "output": "Out5",
+            "input": "InA",
+            "block_hex": "14",
+            "offset_dec": 7,
+            "examples": {
+              "0.0dB_raw": 280,
+              "-20.0dB_raw": 80
+            }
+          }
+        ],
+        "predicted_full_read_map": {
+          "Out1": {
+            "InA": { "block_hex": "0B", "offset_dec": 41 },
+            "InB": { "block_hex": "0B", "offset_dec": 43 },
+            "InC": { "block_hex": "0B", "offset_dec": 45 },
+            "InD": { "block_hex": "0B", "offset_dec": 47 }
+          },
+          "Out2": {
+            "InA": { "block_hex": "0D", "offset_dec": 45 },
+            "InB": { "block_hex": "0D", "offset_dec": 47 },
+            "InC": { "block_hex": "0D", "offset_dec": 49 },
+            "InD": { "block_hex": "0D", "offset_dec": 51 }
+          },
+          "Out3": {
+            "InA": { "block_hex": "0F", "offset_dec": 49 },
+            "InB": { "block_hex": "0F", "offset_dec": 51 },
+            "InC": { "block_hex": "0F", "offset_dec": 53 },
+            "InD": { "block_hex": "10", "offset_dec": 5 }
+          },
+          "Out4": {
+            "InA": { "block_hex": "11", "offset_dec": 53 },
+            "InB": { "block_hex": "12", "offset_dec": 5 },
+            "InC": { "block_hex": "12", "offset_dec": 7 },
+            "InD": { "block_hex": "12", "offset_dec": 9 }
+          },
+          "Out5": {
+            "InA": { "block_hex": "14", "offset_dec": 7 },
+            "InB": { "block_hex": "14", "offset_dec": 9 },
+            "InC": { "block_hex": "14", "offset_dec": 11 },
+            "InD": { "block_hex": "14", "offset_dec": 13 }
+          },
+          "Out6": {
+            "InA": { "block_hex": "16", "offset_dec": 11 },
+            "InB": { "block_hex": "16", "offset_dec": 13 },
+            "InC": { "block_hex": "16", "offset_dec": 15 },
+            "InD": { "block_hex": "16", "offset_dec": 17 }
+          },
+          "Out7": {
+            "InA": { "block_hex": "18", "offset_dec": 15 },
+            "InB": { "block_hex": "18", "offset_dec": 17 },
+            "InC": { "block_hex": "18", "offset_dec": 19 },
+            "InD": { "block_hex": "18", "offset_dec": 21 }
+          },
+          "Out8": {
+            "InA": { "block_hex": "1A", "offset_dec": 19 },
+            "InB": { "block_hex": "1A", "offset_dec": 21 },
+            "InC": { "block_hex": "1A", "offset_dec": 23 },
+            "InD": { "block_hex": "1A", "offset_dec": 25 }
+          }
+        },
+        "observations": [
+          "Out1 InB changed block 0x0B offset 43 from raw 270 to 60 when written from -1.0 dB to -30.0 dB",
+          "Out5 InA changed block 0x14 offset 7 from raw 280 to 80 when written from 0.0 dB to -20.0 dB",
+          "Out4 InB changed block 0x12 offset 5 from raw 270 to 60 when written from -1.0 dB to -30.0 dB",
+          "Out3 InD changed block 0x10 offset 5 from raw 280 to 60 when written from 0.0 dB to -30.0 dB",
+          "Out1 pattern read on block 0x0B showed route byte followed by four matrix gain u16 values: 280, 270, 80, 60"
+        ],
+        "inference": "Matrix crosspoint gain read layout follows the routing byte with four consecutive u16le gain values in input order InA, InB, InC, InD. When the remaining bytes in the current block are exhausted, the sequence wraps into the next block. This wrap behavior was directly observed for Out3/InD and Out4/InB.",
+        "status": "observed_plus_inferred"
       }
     },
     "limiter": {

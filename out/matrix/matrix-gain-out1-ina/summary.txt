@@ -1,0 +1,6 @@
+tag=matrix-gain-out1-ina
+ + frames= + 60 + 
+ + writes= + 30 + 
+ + responses= + 30 + 
+ + readBlockResponses= + 0 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x41, len=8, hex=00 01 05 41 04 00 0E 01} + 

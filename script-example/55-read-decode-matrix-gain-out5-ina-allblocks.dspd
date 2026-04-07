@@ -1,0 +1,30 @@
+let base = "out/read-decode/matrix-gain-out5-ina";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+for (let i in 0..28) {
+    write("00 01 05 41 08 00 18 01");
+    sleep(220);
+    let zero = readBlock(i);
+
+    write("00 01 05 41 08 00 50 00");
+    sleep(220);
+    let minus20 = readBlock(i);
+
+    let offsets = changedOffsets(zero.payload, minus20.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/block-${i}-zero.hex.txt", zero.payloadHex);
+        saveText("${base}/block-${i}-minus20.hex.txt", minus20.payloadHex);
+        saveText("${base}/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/block-${i}-diff-bytes.txt", diffBytes(zero.payload, minus20.payload));
+        saveText("${base}/block-${i}-diff-u16le.txt", diffU16le(zero.payload, minus20.payload));
+        saveDiffReport("${base}/block-${i}-diff-report.txt", zero.payload, minus20.payload);
+        print("changed-block ${i}");
+        print(offsets);
+    }
+}
+
+print("matrix-gain-out5-ina-read-decode-done");

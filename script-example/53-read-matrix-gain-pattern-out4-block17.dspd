@@ -1,0 +1,26 @@
+let base = "out/read-decode/matrix-gain-pattern-out4";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+write("00 01 03 3A 07 08");
+sleep(120);
+
+write("00 01 05 41 07 00 18 01");
+sleep(120);
+write("00 01 05 41 07 01 0E 01");
+sleep(120);
+write("00 01 05 41 07 02 50 00");
+sleep(120);
+write("00 01 05 41 07 03 3C 00");
+sleep(120);
+
+let block = readBlock(0x11);
+
+saveText("${base}/block-17.hex.txt", block.payloadHex);
+saveText("${base}/block-17.ascii.txt", block.payloadAscii);
+
+print("matrix-gain-pattern-out4-done");
+print(block.payloadHex);

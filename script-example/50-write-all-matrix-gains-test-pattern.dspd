@@ -1,0 +1,101 @@
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+print("Writing matrix gain test pattern to all 32 crosspoints");
+print("Expected GUI values per input column:");
+print("InA = 0.0 dB");
+print("InB = -1.0 dB");
+print("InC = -20.0 dB");
+print("InD = -30.0 dB");
+
+// Out1
+write("00 01 05 41 04 00 18 01");
+sleep(60);
+write("00 01 05 41 04 01 0E 01");
+sleep(60);
+write("00 01 05 41 04 02 50 00");
+sleep(60);
+write("00 01 05 41 04 03 3C 00");
+sleep(60);
+
+// Out2
+write("00 01 05 41 05 00 18 01");
+sleep(60);
+write("00 01 05 41 05 01 0E 01");
+sleep(60);
+write("00 01 05 41 05 02 50 00");
+sleep(60);
+write("00 01 05 41 05 03 3C 00");
+sleep(60);
+
+// Out3
+write("00 01 05 41 06 00 18 01");
+sleep(60);
+write("00 01 05 41 06 01 0E 01");
+sleep(60);
+write("00 01 05 41 06 02 50 00");
+sleep(60);
+write("00 01 05 41 06 03 3C 00");
+sleep(60);
+
+// Out4
+write("00 01 05 41 07 00 18 01");
+sleep(60);
+write("00 01 05 41 07 01 0E 01");
+sleep(60);
+write("00 01 05 41 07 02 50 00");
+sleep(60);
+write("00 01 05 41 07 03 3C 00");
+sleep(60);
+
+// Out5
+write("00 01 05 41 08 00 18 01");
+sleep(60);
+write("00 01 05 41 08 01 0E 01");
+sleep(60);
+write("00 01 05 41 08 02 50 00");
+sleep(60);
+write("00 01 05 41 08 03 3C 00");
+sleep(60);
+
+// Out6
+write("00 01 05 41 09 00 18 01");
+sleep(60);
+write("00 01 05 41 09 01 0E 01");
+sleep(60);
+write("00 01 05 41 09 02 50 00");
+sleep(60);
+write("00 01 05 41 09 03 3C 00");
+sleep(60);
+
+// Out7
+write("00 01 05 41 0A 00 18 01");
+sleep(60);
+write("00 01 05 41 0A 01 0E 01");
+sleep(60);
+write("00 01 05 41 0A 02 50 00");
+sleep(60);
+write("00 01 05 41 0A 03 3C 00");
+sleep(60);
+
+// Out8
+write("00 01 05 41 0B 00 18 01");
+sleep(60);
+write("00 01 05 41 0B 01 0E 01");
+sleep(60);
+write("00 01 05 41 0B 02 50 00");
+sleep(60);
+write("00 01 05 41 0B 03 3C 00");
+sleep(60);
+
+saveText("out/matrix/write-all-gains-test-pattern-summary.txt",
+    "matrix gain test pattern written\n"
+    + "InA=0.0dB raw=280\n"
+    + "InB=-1.0dB raw=270\n"
+    + "InC=-20.0dB raw=80\n"
+    + "InD=-30.0dB raw=60\n"
+);
+
+print("done");

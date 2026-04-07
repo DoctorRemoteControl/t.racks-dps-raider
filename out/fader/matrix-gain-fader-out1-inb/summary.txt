@@ -1,0 +1,6 @@
+tag=matrix-gain-fader-out1-inb
+ + command=0x41
+ + allFrames= + 25 + 
+ + seriesCount= + len ( [sniff{dir=PC_TO_DSP, cmd=0x41, len=8, hex=00 01 05 41 04 01 3C 00}] ) + 
+ + changingOffsets= + [] + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x41, len=8, hex=00 01 05 41 04 01 3C 00} + 

@@ -1,0 +1,30 @@
+let base = "out/read-decode/matrix-gain-out3-ind";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+for (let i in 0..28) {
+    write("00 01 05 41 06 03 18 01");
+    sleep(220);
+    let zero = readBlock(i);
+
+    write("00 01 05 41 06 03 3C 00");
+    sleep(220);
+    let minus30 = readBlock(i);
+
+    let offsets = changedOffsets(zero.payload, minus30.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/block-${i}-zero.hex.txt", zero.payloadHex);
+        saveText("${base}/block-${i}-minus30.hex.txt", minus30.payloadHex);
+        saveText("${base}/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/block-${i}-diff-bytes.txt", diffBytes(zero.payload, minus30.payload));
+        saveText("${base}/block-${i}-diff-u16le.txt", diffU16le(zero.payload, minus30.payload));
+        saveDiffReport("${base}/block-${i}-diff-report.txt", zero.payload, minus30.payload);
+        print("changed-block ${i}");
+        print(offsets);
+    }
+}
+
+print("matrix-gain-out3-ind-read-decode-done");

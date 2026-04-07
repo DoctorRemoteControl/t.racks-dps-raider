@@ -1,0 +1,5 @@
+matrix gain test pattern written
+ + InA=0.0dB raw=280
+ + InB=-1.0dB raw=270
+ + InC=-20.0dB raw=80
+ + InD=-30.0dB raw=60

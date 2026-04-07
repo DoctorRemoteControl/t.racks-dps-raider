@@ -1,0 +1,6 @@
+tag=matrix-gain-out8-ind
+ + frames= + 28 + 
+ + writes= + 28 + 
+ + responses= + 0 + 
+ + readBlockResponses= + 0 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x41, len=8, hex=00 01 05 41 0B 03 0E 01} + 

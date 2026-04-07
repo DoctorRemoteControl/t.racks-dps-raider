@@ -1,0 +1,34 @@
+let tag = "matrix-gain-fader-out1-inb";
+let command = 0x41;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "Move only the matrix gain fader for Out1 <- InB across a wider range now. The recorder auto-starts on the first real write and auto-stops after the motion settles.",
+    45000,
+    1400,
+    10000
+);
+
+let series = writesByCommand(cap, command);
+let offsets = changingOffsetsAcrossWrites(series);
+let payloads = payloadSeries(series);
+let u16off6 = u16Series(series, 6);
+let last = lastWriteExcluding(cap, 0x40);
+
+saveText("out/fader/${tag}/summary.txt",
+    "tag=${tag}\n"
+    + "command=0x41\n"
+    + "allFrames=" + cap.totalFrames + "\n"
+    + "seriesCount=" + len(series) + "\n"
+    + "changingOffsets=" + offsets + "\n"
+    + "lastInteresting=" + last + "\n"
+);
+
+saveText("out/fader/${tag}/series.txt", series);
+saveText("out/fader/${tag}/payload-series.txt", payloads);
+saveText("out/fader/${tag}/changing-offsets.txt", offsets);
+saveText("out/fader/${tag}/u16-series-offset-6.txt", u16off6);
+
+print("done");
+print(series);
