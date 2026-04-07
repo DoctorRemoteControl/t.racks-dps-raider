@@ -1,0 +1,27 @@
+let base = "out/read-decode/ina-phase";
+let block = 0x03;
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+write("00 01 03 36 00 00");
+sleep(250);
+let normal = readBlock(block);
+
+write("00 01 03 36 00 01");
+sleep(250);
+let phase180 = readBlock(block);
+
+saveText("${base}/block.hex.txt", block);
+saveText("${base}/normal.hex.txt", normal.payloadHex);
+saveText("${base}/phase180.hex.txt", phase180.payloadHex);
+saveText("${base}/changed-offsets.txt", changedOffsets(normal.payload, phase180.payload));
+saveText("${base}/diff-bytes.txt", diffBytes(normal.payload, phase180.payload));
+saveText("${base}/diff-u16le.txt", diffU16le(normal.payload, phase180.payload));
+saveDiffReport("${base}/diff-report.txt", normal.payload, phase180.payload);
+
+print("ina-phase-read-decode-done");
+print(changedOffsets(normal.payload, phase180.payload));
+print(diffReport(normal.payload, phase180.payload));

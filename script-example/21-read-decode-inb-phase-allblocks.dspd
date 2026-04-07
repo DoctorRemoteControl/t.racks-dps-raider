@@ -1,0 +1,30 @@
+let base = "out/read-decode/inb-phase";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+for (let i in 0..28) {
+    write("00 01 03 36 01 00");
+    sleep(150);
+    let before = readBlock(i);
+
+    write("00 01 03 36 01 01");
+    sleep(150);
+    let after = readBlock(i);
+
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("changed-block ${i}");
+        print(offsets);
+    }
+}
+
+print("inb-phase-read-decode-done");

@@ -1,0 +1,27 @@
+let base = "out/read-decode/ina-mute";
+let block = 0x1C;
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+write("00 01 03 35 00 00");
+sleep(250);
+let unmute = readBlock(block);
+
+write("00 01 03 35 00 01");
+sleep(250);
+let mute = readBlock(block);
+
+saveText("${base}/block.hex.txt", block);
+saveText("${base}/unmute.hex.txt", unmute.payloadHex);
+saveText("${base}/mute.hex.txt", mute.payloadHex);
+saveText("${base}/changed-offsets.txt", changedOffsets(unmute.payload, mute.payload));
+saveText("${base}/diff-bytes.txt", diffBytes(unmute.payload, mute.payload));
+saveText("${base}/diff-u16le.txt", diffU16le(unmute.payload, mute.payload));
+saveDiffReport("${base}/diff-report.txt", unmute.payload, mute.payload);
+
+print("ina-mute-read-decode-done");
+print(changedOffsets(unmute.payload, mute.payload));
+print(diffReport(unmute.payload, mute.payload));

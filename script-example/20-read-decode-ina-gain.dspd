@@ -1,0 +1,27 @@
+let base = "out/read-decode/ina-gain";
+let block = 0x02;
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+write("00 01 04 34 00 18 01");
+sleep(250);
+let gain0 = readBlock(block);
+
+write("00 01 04 34 00 DC 00");
+sleep(250);
+let gainMinus6 = readBlock(block);
+
+saveText("${base}/block.hex.txt", block);
+saveText("${base}/gain-0db.hex.txt", gain0.payloadHex);
+saveText("${base}/gain-minus6db.hex.txt", gainMinus6.payloadHex);
+saveText("${base}/changed-offsets.txt", changedOffsets(gain0.payload, gainMinus6.payload));
+saveText("${base}/diff-bytes.txt", diffBytes(gain0.payload, gainMinus6.payload));
+saveText("${base}/diff-u16le.txt", diffU16le(gain0.payload, gainMinus6.payload));
+saveDiffReport("${base}/diff-report.txt", gain0.payload, gainMinus6.payload);
+
+print("ina-gain-read-decode-done");
+print(changedOffsets(gain0.payload, gainMinus6.payload));
+print(diffReport(gain0.payload, gainMinus6.payload));

@@ -1,0 +1,6 @@
+tag=matrix-route-out1-inb
+ + frames= + 15 + 
+ + writes= + 15 + 
+ + responses= + 0 + 
+ + readBlockResponses= + 0 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x3A, len=6, hex=00 01 03 3A 04 02} + 

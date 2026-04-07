@@ -1,0 +1,33 @@
+let tag = "matrix-route-out8-ina";
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "Select Out8 <- InA now. The capture auto-starts on the first real GUI write and auto-finishes after the action settles.",
+    45000,
+    1400,
+    7000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 20, 0x40);
+let readCount = len(cap.readBlockResponses);
+
+saveText("out/matrix/${tag}/summary.txt",
+    "tag=${tag}\n"
+    + "frames=" + cap.totalFrames + "\n"
+    + "writes=" + cap.writeCount + "\n"
+    + "responses=" + cap.responseCount + "\n"
+    + "readBlockResponses=" + readCount + "\n"
+    + "lastInteresting=" + last + "\n"
+);
+
+saveText("out/matrix/${tag}/last-write.txt", last);
+saveText("out/matrix/${tag}/recent-interesting-writes.txt", recent);
+
+if (readCount > 0) {
+    saveCaptureReadBlocks(cap, "out/matrix/${tag}/blocks");
+}
+
+print("done");
+print(last);

@@ -1,0 +1,35 @@
+let tag = "gain-fader";
+let command = 0x34;
+let channel = 0x00;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "Move exactly one gain fader now. The recorder will auto-start on the first real write and auto-stop after the motion settles.",
+    45000,
+    1200,
+    6000
+);
+
+let series = writesByCommandAndChannel(cap, command, channel);
+let offsets = changingOffsetsAcrossWrites(series);
+let payloads = payloadSeries(series);
+let u16off5 = u16Series(series, 5);
+
+saveText("out/fader/${tag}/summary.txt",
+    "tag=${tag}\n"
+    + "command=0x34\n"
+    + "channel=0x00\n"
+    + "allFrames=" + cap.totalFrames + "\n"
+    + "seriesCount=" + len(series) + "\n"
+    + "changingOffsets=" + offsets + "\n"
+    + "lastInteresting=" + lastWriteExcluding(cap, 0x40) + "\n"
+);
+
+saveText("out/fader/${tag}/series.txt", series);
+saveText("out/fader/${tag}/payload-series.txt", payloads);
+saveText("out/fader/${tag}/changing-offsets.txt", offsets);
+saveText("out/fader/${tag}/u16-series-offset-5.txt", u16off5);
+
+print("done");
+print(series);

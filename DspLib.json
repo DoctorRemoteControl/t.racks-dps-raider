@@ -1,0 +1,1766 @@
+{
+  "schema_version": "4.0",
+  "library_type": "dsp408_field_library",
+  "project": "DSP408Decoder",
+  "evidence_policy": "only facts directly proven by captured dumps, proxy logs, scripted read/write tests, or controlled GUI-change plus read verification",
+  "evidence_sources": [
+    "dsp408_connection_info.json",
+    "docs/evidence/readDSP-dump.json",
+    "dsp408-dump-tool/proxy_logs/*.json",
+    "dsp408-dump-tool/scripts/*.dspd"
+  ],
+  "device": {
+    "vendor_label": "t.racks / Thomann",
+    "product_name": "Track DSP 408",
+    "short_name": "DSP408",
+    "aliases": [
+      "t.racks DSP 408",
+      "Thomann Track DSP",
+      "DSP408"
+    ],
+    "protocol_version_observed": "DSP408 V0104",
+    "channel_counts": {
+      "inputs": 4,
+      "outputs": 8,
+      "total": 12
+    },
+    "channel_count_evidence": {
+      "source": "observed ASCII names in dump",
+      "status": "observed"
+    }
+  },
+  "protocol": {
+    "transport": {
+      "type": "tcp",
+      "default_target": {
+        "ip": "192.168.0.166",
+        "port": 9761
+      },
+      "proxy_defaults": {
+        "listen_host": "127.0.0.1",
+        "listen_port": 9761,
+        "target_ip": "192.168.0.166",
+        "target_port": 9761,
+        "log_dir": "proxy_logs"
+      },
+      "status": "observed"
+    },
+    "timeouts_ms": {
+      "client_connect": 2000,
+      "client_read": 1200,
+      "proxy_target_connect": 3000,
+      "legacy_socket_read": 1000
+    },
+    "buffers": {
+      "client_read_max_bytes": 4096,
+      "proxy_pump_buffer_bytes": 2048
+    },
+    "frame": {
+      "header_hex": ["10", "02"],
+      "footer_hex": ["10", "03"],
+      "direction_marker_offset": 0,
+      "fixed_byte_offset": null,
+      "length_byte_offset": 2,
+      "command_byte_offset": 3,
+      "direction_marker": {
+        "tx": "0x00",
+        "rx": "0x01"
+      },
+      "observed_prefix_bytes": {
+        "tx": ["00", "01"],
+        "rx": ["01", "00"]
+      },
+      "length_semantics": "payload byte at offset 2 contains the count of command byte plus argument bytes",
+      "checksum": {
+        "type": "xor",
+        "algorithm": "xor over all bytes from DLE STX through DLE ETX inclusive, then append 1 checksum byte",
+        "equivalent": null
+      },
+      "payload_escape": {
+        "requests_observed": "0x10 in payload not escaped (requests)",
+        "status": "observed"
+      },
+      "frame_detection": "start at DLE STX, end at DLE ETX; frame detection does not rely on a separate outer frame length",
+      "status": "decoded"
+    },
+    "session": {
+      "handshake_sequence": [
+        "handshake_init",
+        "device_info",
+        "system_info"
+      ],
+      "handshake_init": {
+        "command": "0x10",
+        "tx_payload_hex": "00 01 01 10",
+        "tx_frame_hex": "10 02 00 01 01 10 10 03 11",
+        "rx_payload_hex": "01 00 02 10 13",
+        "status": "observed"
+      },
+      "device_info": {
+        "command": "0x13",
+        "tx_payload_hex": "00 01 01 13",
+        "tx_frame_hex": "10 02 00 01 01 13 10 03 12",
+        "rx_payload_hex": "01 00 0E 13 44 53 50 34 30 38 20 56 30 31 30 34 20",
+        "ascii": "DSP408 V0104",
+        "status": "observed"
+      },
+      "system_info": {
+        "command": "0x2C",
+        "tx_payload_hex": "00 01 01 2C",
+        "tx_frame_hex": "10 02 00 01 01 2C 10 03 2D",
+        "rx_payload_hex": "01 00 07 2C 00 27 0F 00 00 01",
+        "status": "observed"
+      },
+      "keepalive": {
+        "command": "0x12",
+        "tx_payload_hex": "00 01 01 12",
+        "tx_frame_hex": "10 02 00 01 01 12 10 03 13",
+        "interval_ms": 2500,
+        "status": "observed"
+      },
+      "login": {
+        "command": "0x2D",
+        "tx_prefix_hex": "00 01 06 2D 00",
+        "pin_format": "4 ASCII digits",
+        "payload_suffix": "ASCII bytes of the 4 digits",
+        "status": "observed"
+      },
+      "ack": {
+        "rx_payload_hex": "01 00 03 2D 00 00",
+        "status": "observed"
+      }
+    },
+    "block_dump": {
+      "read_command": {
+        "command": "0x27",
+        "payload_template_hex": "00 01 02 27 <block_index>",
+        "frame_template_hex": "10 02 00 01 02 27 <block_index> 10 03 <xor>",
+        "block_range_hex": "00-1C",
+        "status": "decoded"
+      },
+      "read_response": {
+        "command": "0x24",
+        "payload_shape": "01 00 <len> 24 <block_index> <block_payload_bytes...>",
+        "status": "observed"
+      },
+      "blocks_hex": [
+        "00",
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "0A",
+        "0B",
+        "0C",
+        "0D",
+        "0E",
+        "0F",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "1A",
+        "1B",
+        "1C"
+      ],
+      "observed_layout": {
+        "block_count": 29,
+        "regular_block_length": 50,
+        "last_block_length": 48,
+        "status": "observed"
+      }
+    }
+  },
+  "channels": {
+    "index_map": {
+      "InA": 0,
+      "InB": 1,
+      "InC": 2,
+      "InD": 3,
+      "Out1": 4,
+      "Out2": 5,
+      "Out3": 6,
+      "Out4": 7,
+      "Out5": 8,
+      "Out6": 9,
+      "Out7": 10,
+      "Out8": 11
+    },
+    "inputs": ["InA", "InB", "InC", "InD"],
+    "outputs": ["Out1", "Out2", "Out3", "Out4", "Out5", "Out6", "Out7", "Out8"],
+    "matrix_input_bits": {
+      "InA": "0x01",
+      "InB": "0x02",
+      "InC": "0x04",
+      "InD": "0x08"
+    },
+    "matrix_output_channels": {
+      "Out1": "0x04",
+      "Out2": "0x05",
+      "Out3": "0x06",
+      "Out4": "0x07",
+      "Out5": "0x08",
+      "Out6": "0x09",
+      "Out7": "0x0A",
+      "Out8": "0x0B"
+    },
+    "observed_ascii_channel_names": [
+      "InA",
+      "InB",
+      "InC",
+      "InD",
+      "Out1",
+      "Out2",
+      "Out3",
+      "Out4",
+      "Out5",
+      "Out6",
+      "Out7",
+      "Out8"
+    ]
+  },
+  "enums": {
+    "peq_types": [
+      "Peak",
+      "Low Shelf",
+      "High Shelf",
+      "LP -6dB",
+      "LP -12dB",
+      "HP -6dB",
+      "HP -12dB",
+      "All Pass 1",
+      "All Pass 2"
+    ],
+    "crossover_slopes": [
+      "BW -6",
+      "BW -12",
+      "BW -18",
+      "BW -24",
+      "BW -30",
+      "BW -36",
+      "BW -42",
+      "BW -48",
+      "LR -12",
+      "LR -24",
+      "LR -36",
+      "LR -48",
+      "BS -6",
+      "BS -12",
+      "BS -18",
+      "BS -24",
+      "BS -30",
+      "BS -36",
+      "BS -42",
+      "BS -48"
+    ],
+    "geq_band_freqs_hz": [
+      "20",
+      "25",
+      "31.5",
+      "40",
+      "50",
+      "63",
+      "80",
+      "100",
+      "125",
+      "160",
+      "200",
+      "250",
+      "315",
+      "400",
+      "500",
+      "630",
+      "800",
+      "1k",
+      "1.25k",
+      "1.6k",
+      "2k",
+      "2.5k",
+      "3.15k",
+      "4k",
+      "5k",
+      "6.3k",
+      "8k",
+      "10k",
+      "12.5k",
+      "16k",
+      "20k"
+    ],
+    "phase_states": ["0", "180"],
+    "test_tone_sources": [
+      "ANALOG INPUT",
+      "PINK NOISE",
+      "WHITE NOISE",
+      "SINE"
+    ],
+    "preset_slots": {
+      "factory_default": "F00",
+      "user_range": ["U01", "U20"]
+    }
+  },
+  "value_models": {
+    "gain": {
+      "ui_unit": "dB",
+      "gui_range": [-60, 12],
+      "mapping_source": "DspGainMapping.dbToDeviceValue()",
+      "status": "observed"
+    },
+    "peq_frequency": {
+      "ui_unit": "Hz",
+      "gui_range": [20, 20000],
+      "status": "observed"
+    },
+    "peq_q": {
+      "ui_unit": "Q",
+      "gui_range": [0.4, 128],
+      "status": "observed"
+    },
+    "peq_gain": {
+      "ui_unit": "dB",
+      "gui_range": [-12, 12],
+      "status": "observed"
+    },
+    "geq_gain": {
+      "ui_unit": "dB",
+      "gui_range": [-12, 12],
+      "status": "observed"
+    },
+    "delay": {
+      "units": {
+        "ms": [0, 680],
+        "m": [0, 234],
+        "ft": [0, 766]
+      },
+      "status": "observed"
+    },
+    "gate": {
+      "threshold_db": [-90, 0],
+      "hold_ms": [10, 999],
+      "attack_ms": [1, 999],
+      "release_ms": [10, 3000],
+      "status": "observed"
+    },
+    "limiter": {
+      "threshold_db": [-90, 20],
+      "attack_ms": [1, 999],
+      "release_ms": [10, 3000],
+      "status": "observed"
+    },
+    "matrix_crosspoint_gain": {
+      "ui_unit": "dB",
+      "gui_range": [-60, 0],
+      "status": "observed"
+    },
+    "test_tone_sine_frequency": {
+      "ui_unit": "Hz",
+      "gui_range": [20, 20000],
+      "status": "observed"
+    },
+    "device_id": {
+      "gui_range": [1, 254],
+      "status": "observed"
+    },
+    "device_password": {
+      "length": 4,
+      "format": "alphanumeric",
+      "default": "1234",
+      "status": "observed"
+    },
+    "network_ip": {
+      "default_ip": "192.168.1.101",
+      "status": "observed"
+    }
+  },
+  "parameters": {
+    "preset_management": {
+      "ui": {
+        "fields": ["current_name", "read_name", "load", "store_slot", "store_name"]
+      },
+      "read": {
+        "current_name_live_dump": {
+          "storage": "block_dump",
+          "block_hex": "00",
+          "offset_hex": "02",
+          "length": 14,
+          "type": "ascii",
+          "value_observed": "Default Preset",
+          "status": "observed"
+        },
+        "read_name_command": {
+          "command": "0x29",
+          "payload_template_hex": "00 01 02 29 <preset_index>",
+          "preset_range": [0, 19],
+          "status": "observed"
+        }
+      },
+      "write": {
+        "load": {
+          "command": "0x20",
+          "payload_structure": "00 01 02 20 <preset_index>",
+          "preset_index_mapping": {
+            "0x00": "F00",
+            "0x01": "U01",
+            "0x02": "U02",
+            "0x03": "U03",
+            "0x04": "U04",
+            "0x05": "U05",
+            "0x06": "U06",
+            "0x07": "U07",
+            "0x08": "U08",
+            "0x09": "U09",
+            "0x0A": "U10",
+            "0x0B": "U11",
+            "0x0C": "U12",
+            "0x0D": "U13",
+            "0x0E": "U14",
+            "0x0F": "U15",
+            "0x10": "U16",
+            "0x11": "U17",
+            "0x12": "U18",
+            "0x13": "U19",
+            "0x14": "U20"
+          },
+          "observations": [
+            "loading decoderPres (user slot U01) was observed as payload 00 01 02 20 01",
+            "loading pres3 (user slot U03) was observed as payload 00 01 02 20 03",
+            "a previous preset load was observed as payload 00 01 02 20 00",
+            "after preset load, the GUI immediately re-read blocks 0x00 through 0x1C using command 0x27"
+          ],
+          "evidence_level": "strong_write_side",
+          "status": "observed_strong"
+        },
+        "store_slot": {
+          "status": "not_decoded"
+        },
+        "store_name": {
+          "status": "not_decoded"
+        }
+      }
+    },
+    "channel_names": {
+      "ui": {
+        "scope": ["input", "output"],
+        "max_length_unknown": true
+      },
+      "read": {
+        "status": "observed",
+        "observed_ascii_locations": [
+          {
+            "name": "InA",
+            "block_hex": "00",
+            "offset_hex": "10"
+          },
+          {
+            "name": "InB",
+            "block_hex": "03",
+            "offset_hex": "06"
+          },
+          {
+            "name": "InC",
+            "block_hex": "05",
+            "offset_hex": "2E"
+          },
+          {
+            "name": "InD",
+            "block_hex": "08",
+            "offset_hex": "24"
+          },
+          {
+            "name": "Out1",
+            "block_hex": "0B",
+            "offset_hex": "1A"
+          },
+          {
+            "name": "Out2",
+            "block_hex": "0D",
+            "offset_hex": "1E"
+          },
+          {
+            "name": "Out3",
+            "block_hex": "0F",
+            "offset_hex": "22"
+          },
+          {
+            "name": "Out4",
+            "block_hex": "11",
+            "offset_hex": "26"
+          },
+          {
+            "name": "Out5",
+            "block_hex": "13",
+            "offset_hex": "2A"
+          },
+          {
+            "name": "Out6",
+            "block_hex": "15",
+            "offset_hex": "2E"
+          },
+          {
+            "name": "Out7",
+            "block_hex": "18",
+            "offset_hex": "00"
+          },
+          {
+            "name": "Out8",
+            "block_hex": "1A",
+            "offset_hex": "04"
+          }
+        ]
+      },
+      "write": {
+        "status": "not_decoded"
+      }
+    },
+    "gain": {
+      "ui": {
+        "scope": ["input", "output"],
+        "value_model": "gain",
+        "unit": "dB"
+      },
+      "write": {
+        "command": "0x34",
+        "channel_index_range": "0..11",
+        "payload_structure": "00 01 04 34 <channel_index> <gain_raw_lo> <gain_raw_hi>",
+        "mapping_note": "Gain is mapped via DspGainMapping.dbToDeviceValue()",
+        "channel_index_observed": {
+          "InA": "0x00",
+          "InB": "0x01",
+          "InC": "0x02",
+          "InD": "0x03"
+        },
+        "input_write_observations": [
+          "InA gain fader capture produced a write series with payloads such as 00 01 04 34 00 19 01 ... 00 01 04 34 00 00 00",
+          "InB gain fader capture produced a write series with payloads such as 00 01 04 34 01 11 01 ... 00 01 04 34 01 90 01",
+          "scripted read-side decode for InC used payloads 00 01 04 34 02 18 01 and 00 01 04 34 02 DC 00 and confirmed the same command/channel pattern",
+          "scripted read-side decode for InD used payloads 00 01 04 34 03 18 01 and 00 01 04 34 03 DC 00 and confirmed the same command/channel pattern",
+          "for all observed input gain captures/tests, only payload offsets 5 and 6 changed, confirming a u16le gain value field after the channel byte"
+        ],
+        "status": "observed"
+      },
+      "read": {
+        "status": "observed",
+        "type": "u16le",
+        "input_locations": [
+          {
+            "channel": "InA",
+            "block_hex": "02",
+            "offset_dec": 53,
+            "examples": {
+              "0.0dB_raw": 280,
+              "-6.0dB_raw": 220
+            },
+            "note": "confirmed by scripted write 00 01 04 34 00 18 01 vs 00 01 04 34 00 DC 00 and direct diffReport on block 0x02",
+            "status": "observed_strong"
+          },
+          {
+            "channel": "InB",
+            "block_hex": "05",
+            "offset_dec": 43,
+            "examples": {
+              "0.0dB_raw": 280,
+              "-6.0dB_raw": 220
+            },
+            "note": "confirmed by scripted write 00 01 04 34 01 18 01 vs 00 01 04 34 01 DC 00 and direct diffReport on block 0x05",
+            "status": "observed_strong"
+          },
+          {
+            "channel": "InC",
+            "block_hex": "08",
+            "offset_dec": 33,
+            "examples": {
+              "0.0dB_raw": 280,
+              "-6.0dB_raw": 220
+            },
+            "note": "confirmed by scripted write 00 01 04 34 02 18 01 vs 00 01 04 34 02 DC 00 and direct diffReport on block 0x08",
+            "status": "observed_strong"
+          },
+          {
+            "channel": "InD",
+            "block_hex": "0B",
+            "offset_dec": 23,
+            "examples": {
+              "0.0dB_raw": 280,
+              "-6.0dB_raw": 220
+            },
+            "note": "confirmed by scripted write 00 01 04 34 03 18 01 vs 00 01 04 34 03 DC 00 and direct diffReport on block 0x0B",
+            "status": "observed_strong"
+          }
+        ],
+        "output_locations": [
+          {
+            "channel": "Out1",
+            "block_hex": "0D",
+            "offset_dec": 27
+          },
+          {
+            "channel": "Out2",
+            "block_hex": "0F",
+            "offset_dec": 31
+          },
+          {
+            "channel": "Out3",
+            "block_hex": "11",
+            "offset_dec": 35
+          },
+          {
+            "channel": "Out4",
+            "block_hex": "13",
+            "offset_dec": 39
+          },
+          {
+            "channel": "Out5",
+            "block_hex": "15",
+            "offset_dec": 43
+          },
+          {
+            "channel": "Out6",
+            "block_hex": "17",
+            "offset_dec": 47
+          },
+          {
+            "channel": "Out7",
+            "block_hex": "19",
+            "offset_dec": 51
+          },
+          {
+            "channel": "Out8",
+            "block_hex": "1C",
+            "offset_dec": 5
+          }
+        ],
+        "examples": {
+          "0.0dB_raw": 280,
+          "-6.0dB_raw": 220
+        }
+      }
+    },
+    "mute": {
+      "ui": {
+        "scope": ["input", "output"],
+        "states": ["unmute", "mute"]
+      },
+      "write": {
+        "command": "0x35",
+        "payload_structure": "00 01 03 35 <channel_index> <state>",
+        "channel_index_observed": {
+          "InA": "0x00",
+          "InB": "0x01",
+          "InC": "0x02",
+          "InD": "0x03"
+        },
+        "state_mapping": {
+          "0": "unmute",
+          "1": "mute"
+        },
+        "input_write_observations": [
+          "a passive InA mute capture observed payload 00 01 03 35 00 01 during a GUI mute toggle sequence",
+          "scripted read-side decode for InB used payloads 00 01 03 35 01 00 and 00 01 03 35 01 01 and confirmed channel byte 0x01",
+          "scripted read-side decode for InC used payloads 00 01 03 35 02 00 and 00 01 03 35 02 01 and confirmed channel byte 0x02",
+          "scripted read-side decode for InD used payloads 00 01 03 35 03 00 and 00 01 03 35 03 01 and confirmed channel byte 0x03"
+        ],
+        "status": "observed"
+      },
+      "read": {
+        "status": "observed",
+        "outputs": {
+          "storage": "block_dump",
+          "block_hex": "1C",
+          "offset_dec": 15,
+          "encoding": "bitmask",
+          "examples": {
+            "Out1": "0x01",
+            "Out2": "0x02",
+            "Out3": "0x04",
+            "Out4": "0x08",
+            "Out1_plus_Out2": "0x03",
+            "Out2_plus_Out3": "0x06"
+          }
+        },
+        "inputs": {
+          "storage": "block_dump",
+          "block_hex": "1C",
+          "offset_dec": 13,
+          "encoding": "bitmask",
+          "bit_mapping": {
+            "InA": "0x01",
+            "InB": "0x02",
+            "InC": "0x04",
+            "InD": "0x08"
+          },
+          "observations": [
+            {
+              "channel": "InA",
+              "unmute_raw": 0,
+              "mute_raw": 1,
+              "note": "confirmed by scripted write 00 01 03 35 00 00 vs 00 01 03 35 00 01 and direct diffReport on block 0x1C"
+            },
+            {
+              "channel": "InB",
+              "before_raw": 1,
+              "after_raw": 3,
+              "note": "confirmed by scripted write 00 01 03 35 01 00 vs 00 01 03 35 01 01; bit 0x02 toggles for InB"
+            },
+            {
+              "channel": "InC",
+              "before_raw": 3,
+              "after_raw": 7,
+              "note": "confirmed by scripted write 00 01 03 35 02 00 vs 00 01 03 35 02 01; bit 0x04 toggles for InC"
+            },
+            {
+              "channel": "InD",
+              "before_raw": 7,
+              "after_raw": 15,
+              "note": "confirmed by scripted write 00 01 03 35 03 00 vs 00 01 03 35 03 01; bit 0x08 toggles for InD"
+            }
+          ],
+          "status": "observed_strong"
+        }
+      }
+    },
+    "peq_output": {
+      "ui": {
+        "scope": "outputs",
+        "outputs": ["Out1", "Out2", "Out3", "Out4", "Out5", "Out6", "Out7", "Out8"],
+        "bands_per_output": 9,
+        "fields": ["filter_type", "frequency", "q", "gain"],
+        "decoderPres_baseline_all_outputs_same": true,
+        "decoderPres_baseline_out1": [
+          {
+            "band": 1,
+            "band_index_hex": "0x00",
+            "frequency_gui": "40.3Hz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "observed_plus_inferred"
+          },
+          {
+            "band": 2,
+            "band_index_hex": "0x01",
+            "frequency_gui": "84.4Hz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "inferred_from_decoderPres_baseline"
+          },
+          {
+            "band": 3,
+            "band_index_hex": "0x02",
+            "frequency_gui": "176.8Hz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "inferred_from_decoderPres_baseline"
+          },
+          {
+            "band": 4,
+            "band_index_hex": "0x03",
+            "frequency_gui": "370.3Hz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "inferred_from_decoderPres_baseline"
+          },
+          {
+            "band": 5,
+            "band_index_hex": "0x04",
+            "frequency_gui": "757.9Hz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "inferred_from_decoderPres_baseline"
+          },
+          {
+            "band": 6,
+            "band_index_hex": "0x05",
+            "frequency_gui": "1.59KHz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "inferred_from_decoderPres_baseline"
+          },
+          {
+            "band": 7,
+            "band_index_hex": "0x06",
+            "frequency_gui": "3.32KHz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "inferred_from_decoderPres_baseline"
+          },
+          {
+            "band": 8,
+            "band_index_hex": "0x07",
+            "frequency_gui": "6.81KHz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "inferred_from_decoderPres_baseline"
+          },
+          {
+            "band": 9,
+            "band_index_hex": "0x08",
+            "frequency_gui": "14.25KHz",
+            "q_gui": "3.00",
+            "gain_gui": "0.0dB",
+            "type_gui": "Peak",
+            "status": "observed_plus_inferred"
+          }
+        ],
+        "decoderPres_predicted_all_outputs": {
+          "rule": "all outputs Out1..Out8 share the same PEQ baseline values in decoderPres; only the output channel byte changes",
+          "output_channel_mapping_hex": {
+            "Out1": "0x04",
+            "Out2": "0x05",
+            "Out3": "0x06",
+            "Out4": "0x07",
+            "Out5": "0x08",
+            "Out6": "0x09",
+            "Out7": "0x0A",
+            "Out8": "0x0B"
+          },
+          "peq_band_mapping_hex": {
+            "PEQ1": "0x00",
+            "PEQ2": "0x01",
+            "PEQ3": "0x02",
+            "PEQ4": "0x03",
+            "PEQ5": "0x04",
+            "PEQ6": "0x05",
+            "PEQ7": "0x06",
+            "PEQ8": "0x07",
+            "PEQ9": "0x08"
+          },
+          "peak_q3_gain0_template_hex": "00 01 0A 33 <output_channel> <peq_band> 78 00 <frequency_lo> <frequency_hi> 23 00 00",
+          "low_shelf_gain0_template_hex": "00 01 0A 33 <output_channel> <peq_band> 78 00 <frequency_lo> <frequency_hi> 0A 01 00",
+          "status": "predicted_strong"
+        },
+        "field_models": {
+          "filter_type": {
+            "enum_ref": "peq_types"
+          },
+          "frequency": {
+            "value_model": "peq_frequency"
+          },
+          "q": {
+            "value_model": "peq_q"
+          },
+          "gain": {
+            "value_model": "peq_gain"
+          }
+        }
+      },
+      "write": {
+        "command": "0x33",
+        "payload_structure_partial": "00 01 0A 33 <output_channel_index> <gain_or_level_lo> <gain_or_level_hi> <frequency_lo> <frequency_hi> <q_lo> <q_hi> <filter_type> <reserved?>",
+        "scope_observed": "output_peq",
+        "channel_index_observed": {
+          "Out1": 4,
+          "Out8": 11
+        },
+        "band_index_mapping_observed": {
+          "0x00": "PEQ1",
+          "0x01": "PEQ2",
+          "0x02": "PEQ3",
+          "0x03": "PEQ4",
+          "0x04": "PEQ5",
+          "0x05": "PEQ6",
+          "0x06": "PEQ7",
+          "0x07": "PEQ8",
+          "0x08": "PEQ9"
+        },
+        "filter_type_mapping_observed": {
+          "0": "Peak",
+          "1": "Low Shelf",
+          "2": "High Shelf"
+        },
+        "observations": [
+          "command 0x33 was observed during PEQ Out1 GUI changes",
+          "payload byte 4 matched Out1 as 0x04",
+          "the byte before the final reserved-looking byte changed with filter type",
+          "the 16-bit field immediately before filter_type changed together with GUI Q behavior",
+          "during controlled frequency changes on Out1/PEQ1, the second 16-bit field after channel changed while gain, Q and type stayed constant",
+          "during controlled gain changes on Out1/PEQ1, the first 16-bit field after channel changed while frequency, Q and type stayed constant",
+          "for Out1/PEQ9, payload byte 5 was observed as 0x08, matching a zero-based band index for PEQ9",
+          "for Out1/PEQ9, gain, frequency, Q and filter type reused the same field order as Out1/PEQ1",
+          "for Out8/PEQ9 Low Shelf, the payload matched the Out1/PEQ9 Low Shelf structure exactly except for the output channel byte changing from 0x04 to 0x0B",
+          "the user reported that all outputs Out1..Out8 use the same decoderPres PEQ values"
+        ],
+        "examples": {
+          "out1_peak_q_related": "00 01 0A 33 04 00 B4 00 1F 00 23 00 00",
+          "out1_low_shelf_q_auto_071": "00 01 0A 33 04 00 78 00 1F 00 0A 01 00",
+          "out1_high_shelf_q_auto_071": "00 01 0A 33 04 00 B4 00 1F 00 0A 02 00",
+          "out1_peak_q_alt": "00 01 0A 33 04 00 B4 00 1F 00 10 00 00",
+          "out1_peq1_peak_baseline": "00 01 0A 33 04 00 78 00 1F 00 23 00 00",
+          "out1_peq1_peak_q_2_00": "00 01 0A 33 04 00 78 00 1F 00 1C 00 00",
+          "out1_peq1_peak_gain_plus_1db": "00 01 0A 33 04 00 82 00 1F 00 23 00 00",
+          "out1_peq9_peak_gain_plus_1db": "00 01 0A 33 04 08 82 00 1D 01 23 00 00",
+          "out1_peq9_low_shelf_baseline": "00 01 0A 33 04 08 78 00 1D 01 0A 01 00",
+          "out1_peq9_peak_frequency_step": "00 01 0A 33 04 08 82 00 1E 01 23 00 00",
+          "out8_peq9_low_shelf_baseline": "00 01 0A 33 0B 08 78 00 1D 01 0A 01 00"
+        },
+        "predicted_all_outputs_decoderPres": [
+          {
+            "output": "Out1",
+            "channel_hex": "0x04",
+            "bands": [
+              {"band": "PEQ1", "band_hex": "0x00", "frequency_gui": "40.3Hz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ2", "band_hex": "0x01", "frequency_gui": "84.4Hz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ3", "band_hex": "0x02", "frequency_gui": "176.8Hz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ4", "band_hex": "0x03", "frequency_gui": "370.3Hz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ5", "band_hex": "0x04", "frequency_gui": "757.9Hz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ6", "band_hex": "0x05", "frequency_gui": "1.59KHz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ7", "band_hex": "0x06", "frequency_gui": "3.32KHz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ8", "band_hex": "0x07", "frequency_gui": "6.81KHz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"},
+              {"band": "PEQ9", "band_hex": "0x08", "frequency_gui": "14.25KHz", "q_gui": "3.00", "gain_gui": "0.0dB", "type_gui": "Peak"}
+            ],
+            "status": "observed_plus_predicted"
+          },
+          {
+            "output": "Out2",
+            "channel_hex": "0x05",
+            "same_as_output": "Out1",
+            "status": "predicted_strong"
+          },
+          {
+            "output": "Out3",
+            "channel_hex": "0x06",
+            "same_as_output": "Out1",
+            "status": "predicted_strong"
+          },
+          {
+            "output": "Out4",
+            "channel_hex": "0x07",
+            "same_as_output": "Out1",
+            "status": "predicted_strong"
+          },
+          {
+            "output": "Out5",
+            "channel_hex": "0x08",
+            "same_as_output": "Out1",
+            "status": "predicted_strong"
+          },
+          {
+            "output": "Out6",
+            "channel_hex": "0x09",
+            "same_as_output": "Out1",
+            "status": "predicted_strong"
+          },
+          {
+            "output": "Out7",
+            "channel_hex": "0x0A",
+            "same_as_output": "Out1",
+            "status": "predicted_strong"
+          },
+          {
+            "output": "Out8",
+            "channel_hex": "0x0B",
+            "same_as_output": "Out1",
+            "spot_check_example": "00 01 0A 33 0B 08 78 00 1D 01 0A 01 00",
+            "status": "observed_plus_predicted"
+          }
+        ],
+        "field_hypotheses": {
+          "band_index_u8": {
+            "status": "observed_strong",
+            "note": "observed as 0x00 for PEQ1 and 0x08 for PEQ9 on Out1; strongly indicates zero-based PEQ band numbering"
+          },
+          "gain_or_level_u16": {
+            "status": "observed_strong",
+            "note": "for Out1/PEQ1 Peak, this field changed from 0x0078 at 0.0 dB to 0x0082 at +1.0 dB while frequency, Q and type stayed constant; the same 0x0078 to 0x0082 pattern was observed for Out1/PEQ9"
+          },
+          "frequency_u16": {
+            "status": "observed_strong",
+            "note": "for Out1/PEQ1 Peak, this field stepped across values such as 0x001F, 0x0020, 0x0021 ... 0x004F during controlled frequency movement while gain, Q and type stayed constant; for Out1/PEQ9 Peak it stepped from 0x011D to 0x011E during a controlled frequency step"
+          },
+          "q_u8_or_u16le": {
+            "status": "observed_strong",
+            "examples": {
+              "0x0023": "observed with Peak / Q 3.00",
+              "0x001C": "observed with Peak / Q 2.00",
+              "0x000A": "observed when switching to shelf filters with GUI auto-Q around 0.71"
+            },
+            "note": "current evidence suggests the logical Q value may fit in a single byte, but the frame field is still documented conservatively as the bytes immediately before filter_type"
+          },
+          "filter_type_u8": {
+            "status": "observed_strong"
+          },
+          "reserved_tail_u8": {
+            "status": "unknown_partial",
+            "observed_values": [0]
+          }
+        },
+        "status": "observed_strong"
+      },
+      "read": {
+        "status": "observed_partial",
+        "output_observations": {
+          "Out1": {
+            "high_pass_bypass": {
+              "storage": "block_dump",
+              "block_hex": "0x0B",
+              "offset_dec": 53,
+              "write_test_source": "00 01 05 32 04 00 00 14",
+              "observed_change": "00 -> 14",
+              "status": "observed_strong"
+            },
+            "high_pass_frequency": {
+              "storage": "block_dump",
+              "block_hex": "0x0B",
+              "offset_dec": 49,
+              "write_test_source": "00 01 05 32 04 1D 00 00",
+              "observed_change": "00 -> 1D",
+              "status": "observed_strong"
+            },
+            "low_pass_bypass": {
+              "storage": "block_dump",
+              "block_hex": "0x0B",
+              "offset_dec": 54,
+              "write_test_source": "00 01 05 31 04 2C 01 14",
+              "observed_change": "00 -> 14",
+              "status": "observed_strong"
+            },
+            "low_pass_frequency": {
+              "storage": "block_dump",
+              "block_hex": "0x0B",
+              "offset_dec": 51,
+              "write_test_source": "00 01 05 31 04 1D 01 00",
+              "observed_change": "2C -> 1D",
+              "status": "observed_strong"
+            }
+          }
+        }
+      }
+    },
+    "peq_input": {
+      "ui": {
+        "scope": "inputs",
+        "bands_per_input": 9,
+        "fields": ["filter_type", "frequency", "q", "gain"],
+        "field_models": {
+          "filter_type": {
+            "enum_ref": "peq_types"
+          },
+          "frequency": {
+            "value_model": "peq_frequency"
+          },
+          "q": {
+            "value_model": "peq_q"
+          },
+          "gain": {
+            "value_model": "peq_gain"
+          }
+        }
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "observed_partial",
+        "output_observations": {
+          "Out1": {
+            "PEQ1": {
+              "frequency": {
+                "storage": "block_dump",
+                "block_hex": "0x0C",
+                "offset_dec": 7,
+                "write_test_source": "00 01 0A 33 04 00 78 00 22 00 23 00 00",
+                "observed_change": "1F -> 22",
+                "note": "observed through automated decoderPres baseline dump, known write, and before/after block diff",
+                "status": "observed_strong"
+              },
+              "q": {
+                "storage": "block_dump",
+                "block_hex": "0x0C",
+                "offset_dec": 9,
+                "write_test_source": "00 01 0A 33 04 00 78 00 1F 00 1C 00 00",
+                "observed_change": "23 -> 1C",
+                "note": "observed through automated decoderPres baseline dump, known write, and before/after block diff",
+                "status": "observed_strong"
+              },
+              "gain": {
+                "storage": "block_dump",
+                "block_hex": "0x0C",
+                "offset_dec": 5,
+                "write_test_source": "00 01 0A 33 04 00 82 00 1F 00 23 00 00",
+                "observed_change": "78 -> 82",
+                "note": "observed through automated decoderPres baseline dump, known write, and before/after block diff",
+                "status": "observed_strong"
+              }
+            }
+          }
+        }
+      }
+    },
+    "geq_input": {
+      "ui": {
+        "scope": "inputs",
+        "bands": 31,
+        "band_frequencies_ref": "geq_band_freqs_hz",
+        "field": "band_gain",
+        "value_model": "geq_gain"
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "value_model": "same_input_mask_as_write",
+        "stored_values": {
+          "InA": "0x01",
+          "InB": "0x02",
+          "InC": "0x04",
+          "InD": "0x08"
+        },
+        "locations": [
+          {
+            "output": "Out1",
+            "block_hex": "0B",
+            "offset_dec": 39,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out2",
+            "block_hex": "0D",
+            "offset_dec": 43,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out3",
+            "block_hex": "0F",
+            "offset_dec": 47,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out4",
+            "block_hex": "11",
+            "offset_dec": 51,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out5",
+            "block_hex": "14",
+            "offset_dec": 5,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out6",
+            "block_hex": "16",
+            "offset_dec": 9,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out7",
+            "block_hex": "18",
+            "offset_dec": 13,
+            "observed_by_diff": true
+          },
+          {
+            "output": "Out8",
+            "block_hex": "1A",
+            "offset_dec": 17,
+            "observed_by_diff": true
+          }
+        ],
+        "observations": [
+          "Out1 InA vs InC changed block 0x0B offset 39 from 0x01 to 0x04",
+          "Out2 InA vs InC changed block 0x0D offset 43 from 0x01 to 0x04",
+          "Out3 InA vs InC changed block 0x0F offset 47 from 0x01 to 0x04",
+          "Out4 InA vs InC changed block 0x11 offset 51 from 0x01 to 0x04",
+          "Out5 InA vs InC changed block 0x14 offset 5 from 0x01 to 0x04",
+          "Out6 InA vs InC changed block 0x16 offset 9 from 0x01 to 0x04",
+          "Out7 InA vs InC changed block 0x18 offset 13 from 0x01 to 0x04",
+          "Out8 InA vs InC changed block 0x1A offset 17 from 0x01 to 0x04"
+        ],
+        "inference": "The routing read layout is split into two output groups. Out1..Out4 use blocks 0x0B/0x0D/0x0F/0x11 with offsets 39/43/47/51. Out5..Out8 use blocks 0x14/0x16/0x18/0x1A with offsets 5/9/13/17. In both groups the stored byte equals the same input mask used on write-side.",
+        "status": "observed"
+      }
+    },
+    "crossover": {
+      "ui": {
+        "scope": ["input", "output"],
+        "fields": [
+          "high_pass_frequency",
+          "high_pass_slope",
+          "high_pass_family",
+          "high_pass_bypass",
+          "low_pass_frequency",
+          "low_pass_slope",
+          "low_pass_family",
+          "low_pass_bypass"
+        ],
+        "slope_enum_ref": "crossover_slopes",
+        "decoderPres_baseline_outputs": {
+          "all_outputs_same": true,
+          "high_pass": {
+            "frequency_gui": "19.7Hz",
+            "slope_gui": "LK -48",
+            "button_label": "Bypass"
+          },
+          "low_pass": {
+            "frequency_gui": "20.16KHz",
+            "slope_gui": "LK -48",
+            "button_label": "Bypass"
+          }
+        },
+        "predicted_output_channel_mapping_hex": {
+          "Out1": "0x04",
+          "Out2": "0x05",
+          "Out3": "0x06",
+          "Out4": "0x07",
+          "Out5": "0x08",
+          "Out6": "0x09",
+          "Out7": "0x0A",
+          "Out8": "0x0B"
+        }
+      },
+      "write": {
+        "high_pass": {
+          "command": "0x32",
+          "payload_structure_partial": "00 01 05 32 <output_channel_index> <value_lo> <value_hi> <mode_or_state>",
+          "observations": [
+            "for Out1 High Pass Bypass, payloads 00 01 05 32 04 00 00 14 and 00 01 05 32 04 00 00 00 were observed",
+            "for Out1 High Pass Frequency, command 0x32 was observed repeatedly with output channel byte 0x04 and changing u16 values in bytes 5 and 6 while the last byte stayed 0x00",
+            "for Out8 High Pass Bypass, payloads 00 01 05 32 0B 00 00 12 and 00 01 05 32 0B 00 00 00 were observed",
+            "earlier crossover runs were accidentally performed on Out8; those showed the same command structure with channel byte 0x0B"
+          ],
+          "output_channel_index_observed": {
+            "Out1": "0x04",
+            "Out8": "0x0B"
+          },
+          "baseline_examples": {
+            "out1_hp_bypass_toggle_on": "00 01 05 32 04 00 00 14",
+            "out1_hp_bypass_toggle_off": "00 01 05 32 04 00 00 00",
+            "out8_hp_bypass_toggle_on": "00 01 05 32 0B 00 00 12",
+            "out8_hp_bypass_toggle_off": "00 01 05 32 0B 00 00 00"
+          },
+          "frequency_examples": {
+            "out1_hp_frequency_step_low": "00 01 05 32 04 01 00 00",
+            "out1_hp_frequency_step_mid": "00 01 05 32 04 1D 00 00",
+            "out1_hp_frequency_step_high": "00 01 05 32 04 2C 01 00"
+          },
+          "field_hypotheses": {
+            "output_channel_index_u8": {
+              "status": "observed_strong"
+            },
+            "frequency_u16": {
+              "status": "observed_strong",
+              "note": "bytes 5 and 6 changed as a little-endian value during controlled HP frequency changes"
+            },
+            "mode_or_state_u8": {
+              "status": "observed_partial",
+              "observed_values": {
+                "0x00": "normal or non-bypass state",
+                "0x12": "observed for Out8 HP bypass-toggled counterpart",
+                "0x14": "observed for Out1 HP bypass-toggled counterpart"
+              },
+              "note": "current evidence suggests this byte encodes a combined HP mode/state rather than a simple boolean bypass flag"
+            }
+          },
+          "status": "observed_strong"
+        },
+        "low_pass": {
+          "command": "0x31",
+          "payload_structure_partial": "00 01 05 31 <output_channel_index> <value_lo> <value_hi> <mode_or_state>",
+          "observations": [
+            "for Out1 Low Pass Bypass, payloads 00 01 05 31 04 2C 01 14 and 00 01 05 31 04 2C 01 00 were observed",
+            "for Out1 Low Pass Frequency, command 0x31 was observed repeatedly with output channel byte 0x04 and changing u16 values in bytes 5 and 6 while the last byte stayed 0x00",
+            "earlier crossover runs were accidentally performed on Out8; those showed the same command structure with channel byte 0x0B"
+          ],
+          "output_channel_index_observed": {
+            "Out1": "0x04",
+            "Out8": "0x0B"
+          },
+          "baseline_examples": {
+            "out1_lp_bypass_toggle_on": "00 01 05 31 04 2C 01 14",
+            "out1_lp_bypass_toggle_off": "00 01 05 31 04 2C 01 00",
+            "out8_lp_bypass_toggle_on": "00 01 05 31 0B 2C 01 14",
+            "out8_lp_bypass_toggle_off": "00 01 05 31 0B 2C 01 00"
+          },
+          "frequency_examples": {
+            "out1_lp_frequency_step_high": "00 01 05 31 04 2C 01 00",
+            "out1_lp_frequency_step_mid": "00 01 05 31 04 1D 01 00",
+            "out1_lp_frequency_step_low": "00 01 05 31 04 00 00 00"
+          },
+          "field_hypotheses": {
+            "output_channel_index_u8": {
+              "status": "observed_strong"
+            },
+            "frequency_u16": {
+              "status": "observed_strong",
+              "note": "bytes 5 and 6 changed as a little-endian value during controlled LP frequency changes"
+            },
+            "mode_or_state_u8": {
+              "status": "observed_partial",
+              "observed_values": {
+                "0x00": "normal or non-bypass state",
+                "0x14": "bypass-toggled counterpart"
+              }
+            }
+          },
+          "status": "observed_strong"
+        }
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "delay": {
+      "ui": {
+        "scope": ["input", "output"],
+        "fields": ["delay_value", "delay_unit"],
+        "value_model": "delay"
+      },
+      "write": {
+        "command": "0x38",
+        "payload_structure": "00 01 04 38 <channel_index> <delay_raw_lo> <delay_raw_hi>",
+        "mapping_note": "raw = milliseconds * 96",
+        "status": "observed"
+      },
+      "read": {
+        "status": "observed",
+        "type": "u16le",
+        "output_locations": [
+          {
+            "channel": "Out1",
+            "block_hex": "0D",
+            "offset_dec": 31
+          },
+          {
+            "channel": "Out2",
+            "block_hex": "0F",
+            "offset_dec": 35
+          },
+          {
+            "channel": "Out3",
+            "block_hex": "11",
+            "offset_dec": 39
+          },
+          {
+            "channel": "Out4",
+            "block_hex": "13",
+            "offset_dec": 43
+          },
+          {
+            "channel": "Out5",
+            "block_hex": "15",
+            "offset_dec": 47
+          },
+          {
+            "channel": "Out6",
+            "block_hex": "17",
+            "offset_dec": 51
+          },
+          {
+            "channel": "Out7",
+            "block_hex": "1A",
+            "offset_dec": 5
+          },
+          {
+            "channel": "Out8",
+            "block_hex": "1C",
+            "offset_dec": 9
+          }
+        ],
+        "mapping_note": "raw = milliseconds * 96",
+        "examples": {
+          "0.0ms_raw": 0,
+          "10.0ms_raw": 960,
+          "20.0ms_raw": 1920
+        }
+      }
+    },
+    "gate": {
+      "ui": {
+        "scope": ["input", "output"],
+        "fields": ["threshold", "hold", "attack", "release"],
+        "value_model": "gate"
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "limiter": {
+      "ui": {
+        "scope": "manual_known",
+        "fields": ["threshold", "attack", "release"],
+        "value_model": "limiter"
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "compressor": {
+      "ui": {
+        "scope": "software_visible",
+        "fields": ["compression", "threshold", "ratio", "attack", "release"]
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "phase": {
+      "ui": {
+        "scope": ["input", "output"],
+        "field": "state",
+        "enum_ref": "phase_states"
+      },
+      "write": {
+        "command": "0x36",
+        "payload_structure": "00 01 03 36 <channel_index> <state>",
+        "channel_index_observed": {
+          "InA": "0x00",
+          "InB": "0x01",
+          "InC": "0x02",
+          "InD": "0x03"
+        },
+        "state_mapping": {
+          "0": "0",
+          "1": "180"
+        },
+        "input_write_observations": [
+          "a passive InA phase capture observed payload 00 01 03 36 00 01 when the GUI phase was switched to 180 degrees",
+          "scripted read-side decode for InB used payloads 00 01 03 36 01 00 and 00 01 03 36 01 01 and confirmed channel byte 0x01",
+          "scripted read-side decode for InC used payloads 00 01 03 36 02 00 and 00 01 03 36 02 01 and confirmed channel byte 0x02",
+          "scripted read-side decode for InD used payloads 00 01 03 36 03 00 and 00 01 03 36 03 01 and confirmed channel byte 0x03"
+        ],
+        "status": "observed"
+      },
+      "read": {
+        "status": "observed",
+        "type": "u16le_enum",
+        "input_locations": [
+          {
+            "channel": "InA",
+            "block_hex": "03",
+            "offset_dec": 5,
+            "examples": {
+              "0deg_raw": 0,
+              "180deg_raw": 1
+            },
+            "note": "confirmed by scripted write 00 01 03 36 00 00 vs 00 01 03 36 00 01 and direct diffReport on block 0x03",
+            "status": "observed_strong"
+          },
+          {
+            "channel": "InB",
+            "block_hex": "05",
+            "offset_dec": 45,
+            "examples": {
+              "0deg_raw": 0,
+              "180deg_raw": 1
+            },
+            "note": "confirmed by scripted write 00 01 03 36 01 00 vs 00 01 03 36 01 01 and direct diffReport on block 0x05",
+            "status": "observed_strong"
+          },
+          {
+            "channel": "InC",
+            "block_hex": "08",
+            "offset_dec": 35,
+            "examples": {
+              "0deg_raw": 0,
+              "180deg_raw": 1
+            },
+            "note": "confirmed by scripted write 00 01 03 36 02 00 vs 00 01 03 36 02 01 and direct diffReport on block 0x08",
+            "status": "observed_strong"
+          },
+          {
+            "channel": "InD",
+            "block_hex": "0B",
+            "offset_dec": 25,
+            "examples": {
+              "0deg_raw": 0,
+              "180deg_raw": 1
+            },
+            "note": "confirmed by scripted write 00 01 03 36 03 00 vs 00 01 03 36 03 01 and direct diffReport on block 0x0B",
+            "status": "observed_strong"
+          }
+        ],
+        "output_locations": [
+          {
+            "channel": "Out1",
+            "block_hex": "0D",
+            "offset_dec": 29
+          },
+          {
+            "channel": "Out2",
+            "block_hex": "0F",
+            "offset_dec": 33
+          },
+          {
+            "channel": "Out3",
+            "block_hex": "11",
+            "offset_dec": 37
+          },
+          {
+            "channel": "Out4",
+            "block_hex": "13",
+            "offset_dec": 41
+          },
+          {
+            "channel": "Out5",
+            "block_hex": "15",
+            "offset_dec": 45
+          },
+          {
+            "channel": "Out6",
+            "block_hex": "17",
+            "offset_dec": 49
+          },
+          {
+            "channel": "Out7",
+            "block_hex": "19",
+            "offset_dec": 53
+          },
+          {
+            "channel": "Out8",
+            "block_hex": "1C",
+            "offset_dec": 7
+          }
+        ],
+        "examples": {
+          "0deg_raw": 0,
+          "180deg_raw": 1
+        }
+      }
+    },
+    "matrix_routing": {
+      "ui": {
+        "scope": "per_output_input_assignment",
+        "inputs": ["InA", "InB", "InC", "InD"],
+        "outputs": ["Out1", "Out2", "Out3", "Out4", "Out5", "Out6", "Out7", "Out8"],
+        "field": "route_mask"
+      },
+      "write": {
+        "command": "0x3A",
+        "payload_model": "00 01 03 3A <output_channel> <input_mask>",
+        "output_channels": {
+          "Out1": "0x04",
+          "Out2": "0x05",
+          "Out3": "0x06",
+          "Out4": "0x07",
+          "Out5": "0x08",
+          "Out6": "0x09",
+          "Out7": "0x0A",
+          "Out8": "0x0B"
+        },
+        "input_masks": {
+          "InA": "0x01",
+          "InB": "0x02",
+          "InC": "0x04",
+          "InD": "0x08"
+        },
+        "predicted_full_write_map": {
+          "Out1": {
+            "InA": "00 01 03 3A 04 01",
+            "InB": "00 01 03 3A 04 02",
+            "InC": "00 01 03 3A 04 04",
+            "InD": "00 01 03 3A 04 08"
+          },
+          "Out2": {
+            "InA": "00 01 03 3A 05 01",
+            "InB": "00 01 03 3A 05 02",
+            "InC": "00 01 03 3A 05 04",
+            "InD": "00 01 03 3A 05 08"
+          },
+          "Out3": {
+            "InA": "00 01 03 3A 06 01",
+            "InB": "00 01 03 3A 06 02",
+            "InC": "00 01 03 3A 06 04",
+            "InD": "00 01 03 3A 06 08"
+          },
+          "Out4": {
+            "InA": "00 01 03 3A 07 01",
+            "InB": "00 01 03 3A 07 02",
+            "InC": "00 01 03 3A 07 04",
+            "InD": "00 01 03 3A 07 08"
+          },
+          "Out5": {
+            "InA": "00 01 03 3A 08 01",
+            "InB": "00 01 03 3A 08 02",
+            "InC": "00 01 03 3A 08 04",
+            "InD": "00 01 03 3A 08 08"
+          },
+          "Out6": {
+            "InA": "00 01 03 3A 09 01",
+            "InB": "00 01 03 3A 09 02",
+            "InC": "00 01 03 3A 09 04",
+            "InD": "00 01 03 3A 09 08"
+          },
+          "Out7": {
+            "InA": "00 01 03 3A 0A 01",
+            "InB": "00 01 03 3A 0A 02",
+            "InC": "00 01 03 3A 0A 04",
+            "InD": "00 01 03 3A 0A 08"
+          },
+          "Out8": {
+            "InA": "00 01 03 3A 0B 01",
+            "InB": "00 01 03 3A 0B 02",
+            "InC": "00 01 03 3A 0B 04",
+            "InD": "00 01 03 3A 0B 08"
+          }
+        },
+        "observations": [
+          "Out1 -> InA was observed as 00 01 03 3A 04 01",
+          "Out1 -> InB was observed as 00 01 03 3A 04 02",
+          "Out1 -> InC was observed as 00 01 03 3A 04 04",
+          "Out2 -> InA was observed as 00 01 03 3A 05 01",
+          "Out8 -> InA was observed as 00 01 03 3A 0B 01",
+          "Out8 -> InC was observed as 00 01 03 3A 0B 04"
+        ],
+        "inference": "Matrix routing write-side currently looks like a single selected input per output encoded as an input bit mask, not a freely accumulated multi-input write model. The full write map above is predicted from the observed linear output channel mapping Out1..Out8 => 0x04..0x0B and input bit mapping InA..InD => 0x01/0x02/0x04/0x08.",
+        "status": "observed"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "matrix_crosspoint_gain": {
+      "ui": {
+        "scope": "per_input_to_output_gain",
+        "inputs": ["InA", "InB", "InC", "InD"],
+        "outputs": ["Out1", "Out2", "Out3", "Out4", "Out5", "Out6", "Out7", "Out8"],
+        "value_model": "matrix_crosspoint_gain"
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "test_tone_generator": {
+      "ui": {
+        "scope": "global",
+        "fields": ["source", "sine_frequency"],
+        "source_enum_ref": "test_tone_sources",
+        "sine_frequency_model": "test_tone_sine_frequency"
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "device_password": {
+      "ui": {
+        "scope": "device",
+        "fields": ["login_pin", "change_password"],
+        "value_model": "device_password"
+      },
+      "write": {
+        "login": {
+          "command": "0x2D",
+          "payload_prefix_hex": "00 01 06 2D 00",
+          "pin_format": "4 ASCII digits",
+          "status": "observed"
+        },
+        "change_password": {
+          "status": "not_decoded"
+        }
+      },
+      "read": {
+        "status": "not_applicable"
+      }
+    },
+    "device_id": {
+      "ui": {
+        "scope": "device",
+        "field": "device_id",
+        "value_model": "device_id"
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "network_ip": {
+      "ui": {
+        "scope": "device",
+        "field": "ip_address",
+        "value_model": "network_ip"
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "meters": {
+      "ui": {
+        "scope": "runtime_levels",
+        "field": "channel_level"
+      },
+      "write": {
+        "not_applicable": true
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "linking": {
+      "ui": {
+        "scope": ["input_link", "output_link"],
+        "fields": ["link_state"]
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_decoded"
+      }
+    },
+    "copy_channel": {
+      "ui": {
+        "scope": "channel_copy_operation",
+        "fields": ["source_channel", "target_channel"]
+      },
+      "write": {
+        "status": "not_decoded"
+      },
+      "read": {
+        "status": "not_applicable"
+      }
+    }
+  },
+  "dump_layout": {
+    "role": "documentation_only",
+    "source_of_truth": "parameters.*.read",
+    "known_ascii": [
+      "Default Preset",
+      "InA",
+      "InB",
+      "InC",
+      "InD",
+      "Out1",
+      "Out2",
+      "Out3",
+      "Out4",
+      "Out5",
+      "Out6",
+      "Out7",
+      "Out8"
+    ]
+  }
+}

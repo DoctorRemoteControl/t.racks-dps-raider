@@ -1,0 +1,63 @@
+# =========================
+# tracks-dsp-raider
+# Java / Maven / IntelliJ
+# =========================
+
+# Build output
+/target/
+
+
+# Generated sources
+/target/generated-sources/
+/target/generated-test-sources/
+
+# Built artifacts
+
+/*.war
+/*.ear
+
+# Logs / runtime captures
+/proxy_logs/
+/backup/
+
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Java compiled files
+*.class
+
+# Temp / backups
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# Local env files
+.env
+.env.*
+
+# Optional local copies / backups
+/DspLib.bak.json
+/DspLib.bak2.json

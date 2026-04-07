@@ -1,0 +1,30 @@
+let base = "out/read-decode/matrix-out8-ina-vs-inc";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+for (let i in 0..28) {
+    write("00 01 03 3A 0B 01");
+    sleep(220);
+    let ina = readBlock(i);
+
+    write("00 01 03 3A 0B 04");
+    sleep(220);
+    let inc = readBlock(i);
+
+    let offsets = changedOffsets(ina.payload, inc.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/block-${i}-ina.hex.txt", ina.payloadHex);
+        saveText("${base}/block-${i}-inc.hex.txt", inc.payloadHex);
+        saveText("${base}/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/block-${i}-diff-bytes.txt", diffBytes(ina.payload, inc.payload));
+        saveText("${base}/block-${i}-diff-u16le.txt", diffU16le(ina.payload, inc.payload));
+        saveDiffReport("${base}/block-${i}-diff-report.txt", ina.payload, inc.payload);
+        print("changed-block ${i}");
+        print(offsets);
+    }
+}
+
+print("matrix-out8-ina-vs-inc-read-decode-done");
