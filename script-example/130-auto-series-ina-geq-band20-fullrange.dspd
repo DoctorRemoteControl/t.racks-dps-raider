@@ -1,0 +1,32 @@
+let tag = "ina-geq-band20-fullrange";
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "Move only the InA GEQ 20 Hz band fader slowly across its full range from about -12 dB to +12 dB now.",
+    45000,
+    1200,
+    6000
+);
+
+let series = writesByCommandAndChannel(cap, 0x48, 0x00);
+let last = lastWriteExcluding(cap, 0x40);
+
+saveText("out/fader/${tag}/summary.txt",
+    "tag=${tag}\n"
+    + "frames=" + cap.totalFrames + "\n"
+    + "writes=" + cap.writeCount + "\n"
+    + "responses=" + cap.responseCount + "\n"
+    + "seriesCount=" + len(series) + "\n"
+    + "lastInteresting=" + last + "\n"
+);
+
+saveText("out/fader/${tag}/last-write.txt", last);
+saveText("out/fader/${tag}/payload-series.txt", payloadSeries(series));
+saveText("out/fader/${tag}/changing-offsets.txt", changingOffsetsAcrossWrites(series));
+saveText("out/fader/${tag}/u16-at-6.txt", u16Series(series, 6));
+
+print("done");
+print(last);
+print("seriesCount=" + len(series));
+print(changingOffsetsAcrossWrites(series));

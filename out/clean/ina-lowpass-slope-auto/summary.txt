@@ -1,0 +1,5 @@
+tag=ina-lowpass-slope-auto
+ + frames= + 36 + 
+ + writes= + 18 + 
+ + responses= + 18 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x31, len=8, hex=00 01 05 31 00 00 00 00} + 

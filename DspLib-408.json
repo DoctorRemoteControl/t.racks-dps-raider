@@ -283,9 +283,9 @@
       "500",
       "630",
       "800",
-      "1k",
-      "1.25k",
-      "1.6k",
+      "1KHz",
+      "1.25KHz",
+      "1.6KHz",
       "2k",
       "2.5k",
       "3.15k",
@@ -353,7 +353,11 @@
     "geq_gain": {
       "ui_unit": "dB",
       "gui_range": [-12, 12],
-      "status": "observed"
+      "raw_to_gui": "db = (raw / 10.0) - 12.0",
+      "gui_to_raw": "raw = round((db + 12.0) * 10.0)",
+      "raw_range_for_gui": [0, 240],
+      "note": "Inferred strongly from a full-range InA 20 Hz GEQ fader series whose observed raw values climbed up to 240 at the positive end and align with 0.1 dB storage steps across a -12 dB .. +12 dB GUI range.",
+      "status": "observed_plus_inferred_strong"
     },
     "delay": {
       "units": {
@@ -921,7 +925,7 @@
       },
       "write": {
         "command": "0x33",
-        "payload_structure_partial": "00 01 0A 33 <output_channel_index> <gain_or_level_lo> <gain_or_level_hi> <frequency_lo> <frequency_hi> <q_lo> <q_hi> <filter_type> <reserved?>",
+        "payload_structure_partial": "00 01 0A 33 <output_channel_index> <peq_band_index> <gain_or_level_lo> <gain_or_level_hi> <frequency_lo> <frequency_hi> <q_lo> <q_hi> <filter_type> <reserved?>",
         "scope_observed": "output_peq",
         "channel_index_observed": {
           "Out1": 4,
@@ -1062,7 +1066,7 @@
         "status": "observed_strong"
       },
       "read": {
-        "status": "observed_partial",
+        "status": "observed_plus_predicted_strong",
         "output_observations": {
           "Out1": {
             "PEQ1": {
@@ -1099,45 +1103,469 @@
       }
     },
     "peq_input": {
-      "ui": {
-        "scope": "inputs",
-        "bands_per_input": 9,
-        "fields": ["filter_type", "frequency", "q", "gain"],
-        "field_models": {
-          "filter_type": {
-            "enum_ref": "peq_types"
-          },
-          "frequency": {
-            "value_model": "peq_frequency"
-          },
-          "q": {
-            "value_model": "peq_q"
-          },
-          "gain": {
-            "value_model": "peq_gain"
-          }
-        }
+  "ui": {
+    "scope": "inputs",
+    "bands_per_input": 8,
+    "fields": ["filter_type", "frequency", "q", "gain", "bypass"],
+    "field_models": {
+      "filter_type": {
+        "enum_ref": "peq_types"
       },
-      "write": {
-        "status": "not_decoded"
+      "frequency": {
+        "value_model": "peq_frequency"
       },
-      "read": {
-        "status": "not_decoded"
+      "q": {
+        "value_model": "peq_q"
+      },
+      "gain": {
+        "value_model": "peq_gain"
+      },
+      "bypass": {
+        "type": "button"
+      }
+    }
+  },
+  "write": {
+    "status": "observed_plus_predicted_strong",
+    "command": "0x33",
+    "payload_structure": "00 01 0A 33 <input_channel_index> <peq_band_index> <gain_lo> <gain_hi> <frequency_lo> <frequency_hi> <q_raw> <filter_type> <bypass>",
+    "scope_observed": "input_peq",
+    "input_channel_index_mapping": {
+      "InA": "0x00",
+      "InB": "0x01",
+      "InC": "0x02",
+      "InD": "0x03"
+    },
+    "band_index_mapping": {
+      "PEQ1": "0x00",
+      "PEQ2": "0x01",
+      "PEQ3": "0x02",
+      "PEQ4": "0x03",
+      "PEQ5": "0x04",
+      "PEQ6": "0x05",
+      "PEQ7": "0x06",
+      "PEQ8": "0x07"
+    },
+    "field_layout": {
+      "input_channel_index_u8": {
+        "payload_offset_dec": 4,
+        "status": "observed_strong"
+      },
+      "peq_band_index_u8": {
+        "payload_offset_dec": 5,
+        "status": "observed_strong"
+      },
+      "gain_u16le": {
+        "payload_offset_dec": 6,
+        "status": "observed_strong"
+      },
+      "frequency_u16le": {
+        "payload_offset_dec": 8,
+        "status": "observed_strong"
+      },
+      "q_raw_u8": {
+        "payload_offset_dec": 10,
+        "status": "observed_strong"
+      },
+      "filter_type_u8": {
+        "payload_offset_dec": 11,
+        "status": "observed_strong"
+      },
+      "bypass_u8": {
+        "payload_offset_dec": 12,
+        "status": "observed_strong"
       }
     },
+    "filter_type_mapping_observed": {
+      "0": "Peak",
+      "1": "Low Shelf",
+      "2": "High Shelf"
+    },
+    "observations": [
+      "command 0x33 was observed during InA input PEQ GUI changes",
+      "payload byte 4 matched InA as 0x00",
+      "payload byte 5 matched PEQ1 as 0x00 and PEQ8 as 0x07",
+      "an InA PEQ1 gain capture produced 00 01 0A 33 00 00 82 00 29 00 23 00 00",
+      "an InA PEQ1 alternate capture produced 00 01 0A 33 00 00 82 00 02 00 23 00 00",
+      "an InA PEQ1 type capture produced 00 01 0A 33 00 00 82 00 02 00 0A 02 00",
+      "an InA PEQ8 gain capture produced 00 01 0A 33 00 07 F0 00 0E 01 23 00 00",
+      "an InA PEQ8 frequency capture produced 00 01 0A 33 00 07 F0 00 2C 01 23 00 00",
+      "an InA PEQ8 Q capture produced 00 01 0A 33 00 07 F0 00 2C 01 64 00 00",
+      "an InA PEQ8 type capture produced 00 01 0A 33 00 07 F0 00 2C 01 0A 01 00",
+      "an InA PEQ8 bypass capture produced 00 01 0A 33 00 07 F0 00 2C 01 0A 01 01",
+      "the input PEQ payload family is now strongly indicated as a compact layout with q_raw as a single byte, followed by filter_type and bypass"
+    ],
+    "examples": {
+      "ina_peq1_gain_capture_hex": "00 01 0A 33 00 00 82 00 29 00 23 00 00",
+      "ina_peq1_alt_capture_hex": "00 01 0A 33 00 00 82 00 02 00 23 00 00",
+      "ina_peq1_type_capture_hex": "00 01 0A 33 00 00 82 00 02 00 0A 02 00",
+      "ina_peq8_gain_capture_hex": "00 01 0A 33 00 07 F0 00 0E 01 23 00 00",
+      "ina_peq8_frequency_capture_hex": "00 01 0A 33 00 07 F0 00 2C 01 23 00 00",
+      "ina_peq8_q_capture_hex": "00 01 0A 33 00 07 F0 00 2C 01 64 00 00",
+      "ina_peq8_type_capture_hex": "00 01 0A 33 00 07 F0 00 2C 01 0A 01 00",
+      "ina_peq8_bypass_capture_hex": "00 01 0A 33 00 07 F0 00 2C 01 0A 01 01"
+    },
+    "field_hypotheses": {
+      "gain_u16le": {
+        "status": "observed_strong",
+        "note": "observed clearly on InA PEQ8 and consistent with the PEQ command family"
+      },
+      "frequency_u16le": {
+        "status": "observed_strong",
+        "note": "observed clearly on InA PEQ8 where the frequency field changed from 0x010E to 0x012C"
+      },
+      "q_raw_u8": {
+        "status": "observed_strong",
+        "note": "observed clearly on InA PEQ8 where the q byte changed from 0x23 to 0x64 while filter_type and bypass stayed constant"
+      },
+      "filter_type_u8": {
+        "status": "observed_strong",
+        "note": "observed clearly on InA PEQ8 where the filter type changed from 0x00 to 0x01"
+      },
+      "bypass_u8": {
+        "status": "observed_strong",
+        "observed_values": [0, 1],
+        "note": "observed clearly on InA PEQ8 where only the final byte changed from 0x00 to 0x01"
+      }
+    },
+    "predicted_all_inputs": {
+      "rule": "Input PEQ uses the same 0x33 payload family for InA..InD, with input channels 0x00..0x03 and zero-based PEQ band indices 0x00..0x07.",
+      "inputs": {
+        "InA": {
+          "channel_hex": "0x00",
+          "status": "observed_strong"
+        },
+        "InB": {
+          "channel_hex": "0x01",
+          "status": "predicted_strong"
+        },
+        "InC": {
+          "channel_hex": "0x02",
+          "status": "predicted_strong"
+        },
+        "InD": {
+          "channel_hex": "0x03",
+          "status": "predicted_strong"
+        }
+      },
+      "template_hex": "00 01 0A 33 <input_channel_index> <peq_band_index> <gain_lo> <gain_hi> <frequency_lo> <frequency_hi> <q_raw> <filter_type> <bypass>"
+    }
+  },
+  "read": {
+    "status": "observed_plus_predicted_strong",
+    "type": "mixed_u16le_u8_plus_bitmask",
+    "observations": [
+      "automated read-decode for InA PEQ8 gain changed only block 0x02 offset 41",
+      "automated read-decode for InA PEQ8 bypass changed only block 0x1C offset 17",
+      "InA crossover read anchors now exist at block 0x02 offset 47 for high-pass frequency and block 0x02 offset 49 for low-pass frequency",
+      "the observed PEQ8 gain anchor at 0x02:41 and the crossover anchors at 0x02:47/49 strongly support a compact contiguous InA PEQ read layout ending immediately before crossover storage"
+    ],
+    "layout_hypothesis": {
+      "rule": "InA PEQ read storage is strongly predicted as 8 contiguous PEQ band records ending immediately before the InA crossover frequency fields. Each PEQ band uses 6 bytes: gain_u16le, frequency_u16le, q_raw_u8, filter_type_u8. Bypass is stored separately as a bitmask byte.",
+      "band_record_shape": "gain_u16le + frequency_u16le + q_raw_u8 + filter_type_u8",
+      "band_record_size_bytes": 6,
+      "anchor_points": {
+        "InA_PEQ8_gain": {
+          "block_hex": "0x02",
+          "offset_dec": 41,
+          "status": "observed_strong"
+        },
+        "InA_HP_frequency": {
+          "block_hex": "0x02",
+          "offset_dec": 47,
+          "status": "observed_strong"
+        },
+        "InA_LP_frequency": {
+          "block_hex": "0x02",
+          "offset_dec": 49,
+          "status": "observed_strong"
+        }
+      },
+      "status": "predicted_strong"
+    },
+    "input_observations": {
+      "InA": {
+        "PEQ8": {
+          "gain": {
+            "storage": "block_dump",
+            "block_hex": "0x02",
+            "offset_dec": 41,
+            "status": "observed_strong"
+          },
+          "bypass": {
+            "storage": "block_dump",
+            "block_hex": "0x1C",
+            "offset_dec": 17,
+            "status": "observed_strong"
+          }
+        }
+      }
+    },
+    "ina_full_read_prediction": {
+      "PEQ1": {
+        "gain": { "block_hex": "0x01", "offset_dec": 49, "status": "predicted_strong" },
+        "frequency": { "block_hex": "0x01", "offset_dec": 51, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x01", "offset_dec": 53, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x01", "offset_dec": 54, "status": "predicted_strong" }
+      },
+      "PEQ2": {
+        "gain": { "block_hex": "0x02", "offset_dec": 5, "status": "predicted_strong" },
+        "frequency": { "block_hex": "0x02", "offset_dec": 7, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x02", "offset_dec": 9, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x02", "offset_dec": 10, "status": "predicted_strong" }
+      },
+      "PEQ3": {
+        "gain": { "block_hex": "0x02", "offset_dec": 11, "status": "predicted_strong" },
+        "frequency": { "block_hex": "0x02", "offset_dec": 13, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x02", "offset_dec": 15, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x02", "offset_dec": 16, "status": "predicted_strong" }
+      },
+      "PEQ4": {
+        "gain": { "block_hex": "0x02", "offset_dec": 17, "status": "predicted_strong" },
+        "frequency": { "block_hex": "0x02", "offset_dec": 19, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x02", "offset_dec": 21, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x02", "offset_dec": 22, "status": "predicted_strong" }
+      },
+      "PEQ5": {
+        "gain": { "block_hex": "0x02", "offset_dec": 23, "status": "predicted_strong" },
+        "frequency": { "block_hex": "0x02", "offset_dec": 25, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x02", "offset_dec": 27, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x02", "offset_dec": 28, "status": "predicted_strong" }
+      },
+      "PEQ6": {
+        "gain": { "block_hex": "0x02", "offset_dec": 29, "status": "predicted_strong" },
+        "frequency": { "block_hex": "0x02", "offset_dec": 31, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x02", "offset_dec": 33, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x02", "offset_dec": 34, "status": "predicted_strong" }
+      },
+      "PEQ7": {
+        "gain": { "block_hex": "0x02", "offset_dec": 35, "status": "predicted_strong" },
+        "frequency": { "block_hex": "0x02", "offset_dec": 37, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x02", "offset_dec": 39, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x02", "offset_dec": 40, "status": "predicted_strong" }
+      },
+      "PEQ8": {
+        "gain": { "block_hex": "0x02", "offset_dec": 41, "status": "observed_strong" },
+        "frequency": { "block_hex": "0x02", "offset_dec": 43, "status": "predicted_strong" },
+        "q_raw": { "block_hex": "0x02", "offset_dec": 45, "status": "predicted_strong" },
+        "filter_type": { "block_hex": "0x02", "offset_dec": 46, "status": "predicted_strong" }
+      }
+    },
+    "bypass_prediction": {
+      "storage": "block_dump",
+      "block_hex": "0x1C",
+      "offset_dec": 17,
+      "encoding": "bitmask_u8",
+      "bands": ["PEQ1", "PEQ2", "PEQ3", "PEQ4", "PEQ5", "PEQ6", "PEQ7", "PEQ8"],
+      "status": "predicted_strong",
+      "note": "the byte location is strongly indicated by the PEQ8 bypass test, but the exact bit-to-band mapping is not yet proven"
+    },
+    "not_yet_proven": [
+      "InA PEQ8 frequency read location by targeted write/read verification",
+      "InA PEQ8 q read location by targeted write/read verification",
+      "InA PEQ8 filter_type read location by targeted write/read verification",
+      "exact bypass bit-to-band mapping inside block 0x1C offset 17",
+      "direct targeted read verification for InA PEQ1..PEQ7",
+      "full read layout for InB, InC, and InD input PEQ"
+    ]
+  }
+},
     "geq_input": {
       "ui": {
         "scope": "inputs",
         "bands": 31,
         "band_frequencies_ref": "geq_band_freqs_hz",
         "field": "band_gain",
-        "value_model": "geq_gain"
+        "value_model": "geq_gain",
+        "channel_selector": {
+          "channels": ["InA", "InB", "InC", "InD"],
+          "transport_note": "The visible InA/InB/InC/InD selector buttons appear to be GUI-local context selection; no dedicated protocol write has been observed for the selector itself."
+        }
       },
       "write": {
-        "status": "not_decoded"
+        "status": "observed_plus_predicted_strong",
+        "command": "0x48",
+        "payload_structure": "00 01 05 48 <input_channel_index> <band_index> <gain_lo> <gain_hi>",
+        "scope_observed": "input_geq_band_gain",
+        "input_channel_index_mapping": {
+          "InA": "0x00",
+          "InB": "0x01",
+          "InC": "0x02",
+          "InD": "0x03"
+        },
+        "band_index_hypothesis": {
+          "type": "zero_based_linear_band_index",
+          "index_range": [0, 30],
+          "anchors": {
+            "20Hz": "0x00",
+            "20KHz": "0x1E"
+          },
+          "status": "observed_strong"
+        },
+        "band_index_mapping": {
+          "20Hz": "0x00",
+          "25Hz": "0x01",
+          "31.5Hz": "0x02",
+          "40Hz": "0x03",
+          "50Hz": "0x04",
+          "63Hz": "0x05",
+          "80Hz": "0x06",
+          "100Hz": "0x07",
+          "125Hz": "0x08",
+          "160Hz": "0x09",
+          "200Hz": "0x0A",
+          "250Hz": "0x0B",
+          "315Hz": "0x0C",
+          "400Hz": "0x0D",
+          "500Hz": "0x0E",
+          "630Hz": "0x0F",
+          "800Hz": "0x10",
+          "1KHz": "0x11",
+          "1.25KHz": "0x12",
+          "1.6KHz": "0x13",
+          "2KHz": "0x14",
+          "2.5KHz": "0x15",
+          "3.15KHz": "0x16",
+          "4KHz": "0x17",
+          "5KHz": "0x18",
+          "6.3KHz": "0x19",
+          "8KHz": "0x1A",
+          "10KHz": "0x1B",
+          "12.5KHz": "0x1C",
+          "16KHz": "0x1D",
+          "20KHz": "0x1E"
+        },
+        "field_layout": {
+          "input_channel_index": { "payload_offset_dec": 4, "status": "observed_strong" },
+          "band_index": { "payload_offset_dec": 5, "status": "observed_strong" },
+          "gain_u16le": { "payload_offset_dec": 6, "status": "observed_strong" }
+        },
+        "field_mappings": {
+          "band_gain": {
+            "raw_to_gui": "db = (raw / 10.0) - 12.0",
+            "gui_to_raw": "raw = round((db + 12.0) * 10.0)",
+            "raw_range_for_gui": [0, 240],
+            "status": "observed_plus_inferred_strong"
+          }
+        },
+        "observations": [
+          "InA GEQ 20 Hz band movement sent 00 01 05 48 00 00 F0 00",
+          "InB GEQ 20 Hz band movement sent 00 01 05 48 01 00 F0 00",
+          "InC GEQ 20 Hz band movement sent 00 01 05 48 02 00 F0 00",
+          "InA GEQ 20 KHz band movement sent 00 01 05 48 00 1E F0 00",
+          "InD GEQ 20 Hz band movement sent 00 01 05 48 03 00 00 00",
+          "The only observed protocol differences between the InA 20 Hz and InA 20 KHz captures were the band index byte changing from 0x00 to 0x1E while the gain bytes stayed the same",
+          "The only observed protocol differences between the InA 20 Hz and InD 20 Hz captures were the input channel byte changing from 0x00 to 0x03 while the band index stayed at 0x00",
+          "No dedicated GEQ channel-selector write has been observed; the selected input channel appears to be encoded directly in each 0x48 band-gain write",
+          "A full-range InA 20 Hz GEQ series changed only payload offset 6/7 and produced raw values [2, 6, 8, 9, 12, 23, 29, 39, 47, 56, 67, 73, 82, 94, 106, 114, 141, 147, 152, 191, 213, 235, 240], strongly suggesting a 0.1 dB storage step over the -12 dB .. +12 dB GUI range with raw 240 at the positive end"
+        ],
+        "examples": {
+          "ina_band_20hz_capture_hex": "00 01 05 48 00 00 F0 00",
+          "inb_band_20hz_capture_hex": "00 01 05 48 01 00 F0 00",
+          "inc_band_20hz_capture_hex": "00 01 05 48 02 00 F0 00",
+          "ina_band_20khz_capture_hex": "00 01 05 48 00 1E F0 00",
+          "ind_band_20hz_capture_hex": "00 01 05 48 03 00 00 00"
+        },
+        "predicted_all_inputs": {
+          "rule": "GEQ uses the same 0x48 write layout for InA..InD; the input channel byte changes linearly from 0x00 to 0x03 and the band index is a zero-based 0..30 selector for the 31 visible bands.",
+          "inputs": {
+            "InA": { "channel_hex": "0x00", "status": "observed_strong" },
+            "InB": { "channel_hex": "0x01", "status": "observed_strong" },
+            "InC": { "channel_hex": "0x02", "status": "observed_strong" },
+            "InD": { "channel_hex": "0x03", "status": "observed_strong" }
+          },
+          "template_hex": "00 01 05 48 <input_channel_index> <band_index> <gain_lo> <gain_hi>"
+        },
+        "predicted_all_band_writes": {
+          "rule": "For every GEQ band write, only the input channel byte, zero-based band index, and gain_u16le value vary. All 31 bands reuse the same 0x48 payload shape.",
+          "sample_templates": {
+            "InA_20Hz": "00 01 05 48 00 00 <gain_lo> <gain_hi>",
+            "InA_1KHz": "00 01 05 48 00 11 <gain_lo> <gain_hi>",
+            "InA_20KHz": "00 01 05 48 00 1E <gain_lo> <gain_hi>",
+            "InB_20Hz": "00 01 05 48 01 00 <gain_lo> <gain_hi>",
+            "InC_20Hz": "00 01 05 48 02 00 <gain_lo> <gain_hi>",
+            "InD_20Hz": "00 01 05 48 03 00 <gain_lo> <gain_hi>",
+            "InD_20KHz": "00 01 05 48 03 1E <gain_lo> <gain_hi>"
+          },
+          "status": "observed_plus_predicted_strong"
+        }
       },
       "read": {
-        "status": "not_decoded"
+        "status": "observed_plus_predicted_strong",
+        "type": "u16le",
+        "field_mappings": {
+          "band_gain": {
+            "raw_to_gui": "db = (raw / 10.0) - 12.0",
+            "gui_to_raw": "raw = round((db + 12.0) * 10.0)",
+            "raw_range_for_gui": [0, 240],
+            "status": "observed_plus_inferred_strong"
+          }
+        },
+        "layout_hypothesis": {
+          "rule": "Input GEQ read storage is linear per input and per band. Each band uses one u16le. Bands advance by +2 bytes across usable block offsets 5..53, then wrap to the next block at offset 5. Input changes follow a +3 blocks / -10 bytes start-offset stride.",
+          "usable_offsets_per_block": "5..53 step 2",
+          "u16_slots_per_block": 25,
+          "band_stride_bytes": 2,
+          "input_stride": {
+            "block_delta": 3,
+            "offset_delta": -10
+          },
+          "formula": {
+            "channel_index_map": {
+              "InA": 0,
+              "InB": 1,
+              "InC": 2,
+              "InD": 3
+            },
+            "band_index_ref": "geq_band_freqs_hz",
+            "base_block": "channel_index * 3",
+            "base_slot": "16 - (channel_index * 5)",
+            "slot": "base_slot + band_index",
+            "block_hex": "base_block + floor(slot / 25)",
+            "offset_dec": "5 + ((slot % 25) * 2)"
+          },
+          "status": "observed_plus_predicted_strong"
+        },
+        "anchors_observed": {
+          "InA": {
+            "20Hz": { "block_hex": "00", "offset_dec": 37, "status": "observed_strong" },
+            "1KHz": { "block_hex": "01", "offset_dec": 21, "status": "observed_strong" },
+            "10KHz": { "block_hex": "01", "offset_dec": 41, "status": "observed_strong" },
+            "20KHz": { "block_hex": "01", "offset_dec": 47, "status": "observed_strong" }
+          },
+          "InD": {
+            "20Hz": { "block_hex": "09", "offset_dec": 7, "status": "observed_strong" }
+          }
+        },
+        "predicted_ranges": {
+          "InA": {
+            "block_00": "20Hz..125Hz @ offsets 37..53 step 2",
+            "block_01": "160Hz..20KHz @ offsets 5..47 step 2"
+          },
+          "InB": {
+            "block_03": "20Hz..400Hz @ offsets 27..53 step 2",
+            "block_04": "500Hz..20KHz @ offsets 5..37 step 2"
+          },
+          "InC": {
+            "block_06": "20Hz..1.25KHz @ offsets 17..53 step 2",
+            "block_07": "1.6KHz..20KHz @ offsets 5..27 step 2"
+          },
+          "InD": {
+            "block_09": "20Hz..4KHz @ offsets 7..53 step 2",
+            "block_0A": "5KHz..20KHz @ offsets 5..17 step 2"
+          }
+        },
+        "observations": [
+          "Automated read-decode for InA GEQ 20 Hz changed only block 0x00 offset 37 when written from raw 0 to raw 240",
+          "Automated read-decode for InA GEQ 1 KHz changed only block 0x01 offset 21 when written from raw 0 to raw 240",
+          "Automated read-decode for InA GEQ 10 KHz changed only block 0x01 offset 41 when written from raw 0 to raw 240",
+          "Automated read-decode for InA GEQ 20 KHz changed only block 0x01 offset 47 when written from raw 0 to raw 240",
+          "Automated read-decode for InD GEQ 20 Hz changed only block 0x09 offset 7 when written from raw 0 to raw 240"
+        ],
+        "not_yet_proven": [
+          "direct targeted read verification for InB and InC GEQ bands",
+          "full multi-input verification of the predicted GEQ band layout beyond the observed anchor points"
+        ]
       }
     },
     "crossover": {
@@ -1181,18 +1609,28 @@
       "write": {
         "high_pass": {
           "command": "0x32",
-          "payload_structure_partial": "00 01 05 32 <output_channel_index> <value_lo> <value_hi> <mode_or_state>",
+          "payload_structure_partial": "00 01 05 32 <channel_index> <value_lo> <value_hi> <mode_or_state>",
           "observations": [
             "for Out1 High Pass Bypass, payloads 00 01 05 32 04 00 00 14 and 00 01 05 32 04 00 00 00 were observed",
             "for Out1 High Pass Frequency, command 0x32 was observed repeatedly with output channel byte 0x04 and changing u16 values in bytes 5 and 6 while the last byte stayed 0x00",
             "for Out8 High Pass Bypass, payloads 00 01 05 32 0B 00 00 12 and 00 01 05 32 0B 00 00 00 were observed",
-            "earlier crossover runs were accidentally performed on Out8; those showed the same command structure with channel byte 0x0B"
+            "earlier crossover runs were accidentally performed on Out8; those showed the same command structure with channel byte 0x0B",
+            "for InA High Pass Frequency, payload 00 01 05 32 00 2C 01 00 was observed",
+            "for InA High Pass Bypass, payload 00 01 05 32 00 2C 01 13 was observed",
+            "for InA High Pass slope, payload 00 01 05 32 00 2C 01 01 was observed for one slope endpoint and payload 00 01 05 32 00 2C 01 14 was observed for the opposite slope endpoint"
           ],
+          "input_channel_index_observed": {
+            "InA": "0x00"
+          },
           "output_channel_index_observed": {
             "Out1": "0x04",
             "Out8": "0x0B"
           },
           "baseline_examples": {
+            "ina_hp_frequency_capture": "00 01 05 32 00 2C 01 00",
+            "ina_hp_slope_endpoint_a": "00 01 05 32 00 2C 01 01",
+            "ina_hp_slope_endpoint_b": "00 01 05 32 00 2C 01 14",
+            "ina_hp_bypass_toggle_on": "00 01 05 32 00 2C 01 13",
             "out1_hp_bypass_toggle_on": "00 01 05 32 04 00 00 14",
             "out1_hp_bypass_toggle_off": "00 01 05 32 04 00 00 00",
             "out8_hp_bypass_toggle_on": "00 01 05 32 0B 00 00 12",
@@ -1215,27 +1653,37 @@
               "status": "observed_partial",
               "observed_values": {
                 "0x00": "normal or non-bypass state",
+                "0x01": "observed for one InA HP slope endpoint",
+                "0x13": "observed for InA HP bypass-toggled counterpart",
                 "0x12": "observed for Out8 HP bypass-toggled counterpart",
                 "0x14": "observed for Out1 HP bypass-toggled counterpart"
               },
-              "note": "current evidence suggests this byte encodes a combined HP mode/state rather than a simple boolean bypass flag"
+              "note": "current evidence suggests this byte encodes a combined HP slope/family/bypass mode rather than a simple boolean bypass flag"
             }
           },
           "status": "observed_strong"
         },
         "low_pass": {
           "command": "0x31",
-          "payload_structure_partial": "00 01 05 31 <output_channel_index> <value_lo> <value_hi> <mode_or_state>",
+          "payload_structure_partial": "00 01 05 31 <channel_index> <value_lo> <value_hi> <mode_or_state>",
           "observations": [
             "for Out1 Low Pass Bypass, payloads 00 01 05 31 04 2C 01 14 and 00 01 05 31 04 2C 01 00 were observed",
             "for Out1 Low Pass Frequency, command 0x31 was observed repeatedly with output channel byte 0x04 and changing u16 values in bytes 5 and 6 while the last byte stayed 0x00",
-            "earlier crossover runs were accidentally performed on Out8; those showed the same command structure with channel byte 0x0B"
+            "earlier crossover runs were accidentally performed on Out8; those showed the same command structure with channel byte 0x0B",
+            "for InA Low Pass Frequency, payload 00 01 05 31 00 00 00 00 was observed",
+            "for InA Low Pass Bypass, payload 00 01 05 31 00 00 00 13 was observed",
+            "the InA Low Pass slope click did not produce a distinct write from the captured baseline, so slope remains undecoded on the write side"
           ],
+          "input_channel_index_observed": {
+            "InA": "0x00"
+          },
           "output_channel_index_observed": {
             "Out1": "0x04",
             "Out8": "0x0B"
           },
           "baseline_examples": {
+            "ina_lp_frequency_capture": "00 01 05 31 00 00 00 00",
+            "ina_lp_bypass_toggle_on": "00 01 05 31 00 00 00 13",
             "out1_lp_bypass_toggle_on": "00 01 05 31 04 2C 01 14",
             "out1_lp_bypass_toggle_off": "00 01 05 31 04 2C 01 00",
             "out8_lp_bypass_toggle_on": "00 01 05 31 0B 2C 01 14",
@@ -1258,6 +1706,7 @@
               "status": "observed_partial",
               "observed_values": {
                 "0x00": "normal or non-bypass state",
+                "0x13": "observed for InA LP bypass-toggled counterpart",
                 "0x14": "bypass-toggled counterpart"
               }
             }
@@ -1267,6 +1716,22 @@
       },
       "read": {
         "status": "observed_partial",
+        "input_observations": {
+          "InA": {
+            "high_pass_frequency": {
+              "storage": "block_dump",
+              "block_hex": "0x02",
+              "offset_dec": 47,
+              "status": "observed_strong"
+            },
+            "low_pass_frequency": {
+              "storage": "block_dump",
+              "block_hex": "0x02",
+              "offset_dec": 49,
+              "status": "observed_strong"
+            }
+          }
+        },
         "output_observations": {
           "Out1": {
             "high_pass_bypass": {
@@ -1439,14 +1904,20 @@
         "status": "inferred_strong"
       }
     },
+    "observations": [
+      "automated delay read hypothesis test wrote InA from 0.0 ms to 20.0 ms and changed only block 0x03 offsets 7..8",
+      "automated delay read hypothesis test wrote InD from 0.0 ms to 20.0 ms and changed only block 0x0B offsets 27..28",
+      "automated delay read hypothesis test wrote Out1 from 0.0 ms to 20.0 ms and changed only block 0x0D offsets 31..32",
+      "automated delay read hypothesis test wrote Out8 from 0.0 ms to 20.0 ms and changed only block 0x1C offsets 9..10"
+    ],
     "full_channel_read_map": {
       "rule": "Delay storage is strongly predicted to sit immediately after phase for each channel, i.e. gain +2 bytes = phase, and phase +2 bytes = delay. This matches the fully observed output delay map and the already proven gain/phase storage layout.",
       "channels": {
         "InA": {
           "block_hex": "03",
           "offset_dec": 7,
-          "basis": "predicted from InA gain@02:53 and phase@03:5",
-          "status": "predicted_strong"
+          "basis": "observed by automated delay read hypothesis test: writing InA from 0.0 ms to 20.0 ms changed only block 0x03 offsets 7..8; also matches gain@02:53 and phase@03:5 adjacency",
+          "status": "observed_strong"
         },
         "InB": {
           "block_hex": "05",
@@ -1463,8 +1934,8 @@
         "InD": {
           "block_hex": "0B",
           "offset_dec": 27,
-          "basis": "predicted from InD gain@0B:23 and phase@0B:25",
-          "status": "predicted_strong"
+          "basis": "observed by automated delay read hypothesis test: writing InD from 0.0 ms to 20.0 ms changed only block 0x0B offsets 27..28; also matches gain@0B:23 and phase@0B:25 adjacency",
+          "status": "observed_strong"
         },
         "Out1": {
           "block_hex": "0D",

@@ -1,0 +1,5 @@
+tag=ina-peq1-gain-auto
+ + frames= + 61 + 
+ + writes= + 31 + 
+ + responses= + 30 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 00 00 82 00 29 00 23 00 00} + 

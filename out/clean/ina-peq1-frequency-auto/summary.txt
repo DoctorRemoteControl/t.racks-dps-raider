@@ -1,0 +1,5 @@
+tag=ina-peq1-frequency-auto
+ + frames= + 48 + 
+ + writes= + 24 + 
+ + responses= + 24 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 00 00 82 00 29 00 23 00 00} + 

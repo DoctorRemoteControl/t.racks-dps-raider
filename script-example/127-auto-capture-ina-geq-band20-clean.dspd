@@ -1,0 +1,27 @@
+let tag = "ina-geq-band20-auto";
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "Move only the InA GEQ 20 Hz band fader once now.",
+    45000,
+    1200,
+    6000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 12, 0x40);
+
+saveText("out/clean/${tag}/summary.txt",
+    "tag=${tag}\n"
+    + "frames=" + cap.totalFrames + "\n"
+    + "writes=" + cap.writeCount + "\n"
+    + "responses=" + cap.responseCount + "\n"
+    + "lastInteresting=" + last + "\n"
+);
+
+saveText("out/clean/${tag}/last-write.txt", last);
+saveText("out/clean/${tag}/recent-interesting-writes.txt", recent);
+
+print("done");
+print(last);

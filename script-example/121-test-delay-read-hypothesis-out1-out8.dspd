@@ -1,0 +1,54 @@
+let base = "out/hypothesis/delay-read-out1-out8";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Out1: 0.0 ms -> 20.0 ms (raw 1920 = 0x0780)
+for (let i in 0..28) {
+    write("00 01 04 38 04 00 00");
+    sleep(150);
+    let before = readBlock(i);
+
+    write("00 01 04 38 04 80 07");
+    sleep(150);
+    let after = readBlock(i);
+
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out1/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out1/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out1/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out1/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out1/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out1/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out1 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+# Out8: 0.0 ms -> 20.0 ms (raw 1920 = 0x0780)
+for (let i in 0..28) {
+    write("00 01 04 38 0B 00 00");
+    sleep(150);
+    let before = readBlock(i);
+
+    write("00 01 04 38 0B 80 07");
+    sleep(150);
+    let after = readBlock(i);
+
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out8/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out8/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out8/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out8/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out8/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out8/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out8 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+print("delay-read-hypothesis-out1-out8-done");

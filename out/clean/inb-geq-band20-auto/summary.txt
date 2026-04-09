@@ -1,0 +1,5 @@
+tag=inb-geq-band20-auto
+ + frames= + 64 + 
+ + writes= + 32 + 
+ + responses= + 32 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x48, len=8, hex=00 01 05 48 01 00 F0 00} + 

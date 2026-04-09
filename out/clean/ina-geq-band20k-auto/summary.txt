@@ -1,0 +1,5 @@
+tag=ina-geq-band20k-auto
+ + frames= + 130 + 
+ + writes= + 65 + 
+ + responses= + 65 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x48, len=8, hex=00 01 05 48 00 1E F0 00} + 

@@ -1,0 +1,5 @@
+tag=ina-highpass-slope-auto
+ + frames= + 39 + 
+ + writes= + 20 + 
+ + responses= + 19 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x32, len=8, hex=00 01 05 32 00 2C 01 14} + 

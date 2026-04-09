@@ -1,0 +1,5 @@
+tag=ina-peq8-bypass-auto
+ + frames= + 22 + 
+ + writes= + 11 + 
+ + responses= + 11 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 00 07 F0 00 2C 01 0A 01 01} + 

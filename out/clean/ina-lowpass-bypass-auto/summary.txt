@@ -1,0 +1,5 @@
+tag=ina-lowpass-bypass-auto
+ + frames= + 32 + 
+ + writes= + 16 + 
+ + responses= + 16 + 
+ + lastInteresting= + sniff{dir=PC_TO_DSP, cmd=0x31, len=8, hex=00 01 05 31 00 00 00 13} + 
