@@ -131,6 +131,7 @@ public final class DspLibLookup {
             return out;
         }
 
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
         Iterator<Map.Entry<String, JsonNode>> it = node.fields();
         while (it.hasNext()) {
             Map.Entry<String, JsonNode> entry = it.next();
@@ -158,6 +159,7 @@ public final class DspLibLookup {
         }
 
         Iterator<Map.Entry<String, JsonNode>> it = node.fields();
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
         while (it.hasNext()) {
             Map.Entry<String, JsonNode> entry = it.next();
             if (entry.getValue().isTextual()) {
@@ -175,6 +177,7 @@ public final class DspLibLookup {
 
         Iterator<Map.Entry<String, JsonNode>> it = node.fields();
         while (it.hasNext()) {
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
             Map.Entry<String, JsonNode> entry = it.next();
             if (entry.getValue().isTextual()) {
                 out.put(parseFlexibleInt(entry.getKey()), entry.getValue().asText());
@@ -192,6 +195,7 @@ public final class DspLibLookup {
         Iterator<Map.Entry<String, JsonNode>> it = node.fields();
         while (it.hasNext()) {
             Map.Entry<String, JsonNode> entry = it.next();
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
             if (entry.getValue().canConvertToInt()) {
                 out.put(entry.getValue().asInt(), entry.getKey());
             }

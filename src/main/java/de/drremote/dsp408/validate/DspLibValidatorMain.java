@@ -205,6 +205,7 @@ final class DspLibValidator {
         JsonNode indexMap = root.at("/channels/index_map");
         JsonNode matrixOutputChannels = root.at("/channels/matrix_output_channels");
         if (indexMap.isObject() && matrixOutputChannels.isObject()) {
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
             Iterator<Map.Entry<String, JsonNode>> it = matrixOutputChannels.fields();
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = it.next();
@@ -233,6 +234,7 @@ final class DspLibValidator {
         if (matrixInputBits.isObject()) {
             Set<Integer> seenBits = new HashSet<>();
             Iterator<Map.Entry<String, JsonNode>> it = matrixInputBits.fields();
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = it.next();
                 String input = entry.getKey();
@@ -273,6 +275,7 @@ final class DspLibValidator {
         if (node.isObject()) {
             Iterator<Map.Entry<String, JsonNode>> it = node.fields();
             while (it.hasNext()) {
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
                 Map.Entry<String, JsonNode> entry = it.next();
                 String key = entry.getKey();
                 JsonNode child = entry.getValue();
@@ -316,6 +319,7 @@ final class DspLibValidator {
             Iterator<Map.Entry<String, JsonNode>> it = parameters.fields();
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = it.next();
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
                 String parameterName = entry.getKey();
                 JsonNode readNode = entry.getValue().path("read");
                 String path = "$.parameters." + parameterName + ".read";
@@ -358,6 +362,7 @@ final class DspLibValidator {
             while (it.hasNext()) {
                 Map.Entry<String, JsonNode> entry = it.next();
                 walkReadNode(entry.getValue(), path + "." + entry.getKey(), current, ctx, issues, claims);
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
             }
             return;
         }
@@ -492,6 +497,7 @@ final class DspLibValidator {
                 Map.Entry<String, JsonNode> entry = it.next();
                 walkForFieldLayouts(entry.getValue(), path + "." + entry.getKey(), issues);
             }
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
             return;
         }
 
@@ -512,6 +518,7 @@ final class DspLibValidator {
             String fieldName = entry.getKey();
             JsonNode fieldNode = entry.getValue();
 
+// [PROBLEM2CODE] WARNING: The method fields() from the type JsonNode is deprecated
             if (!fieldNode.has("payload_offset_dec")) {
                 continue;
             }
