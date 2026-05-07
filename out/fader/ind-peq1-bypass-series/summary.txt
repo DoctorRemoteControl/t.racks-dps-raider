@@ -1,0 +1,14 @@
+tag=ind-peq1-bypass-series
+control=bypass
+command=0x33
+channel=0x03
+band=0x00
+expectedOffset=12
+frames=95
+writes=48
+responses=47
+peqAll=2
+seriesCount=2
+changingOffsets=[12]
+allPeqChangingOffsets=[12]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 03 00 00 00 2C 01 0A 01 01}

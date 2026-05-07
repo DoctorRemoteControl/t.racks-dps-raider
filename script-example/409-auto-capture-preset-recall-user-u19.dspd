@@ -1,0 +1,31 @@
+// Fresh GUI capture: recall/load last user preset U19.
+// GUI-only capture: do not reset or handshake the control session.
+
+let tag = "preset-recall-user-u19-fresh";
+let base = "out/preset/${tag}";
+
+connect();
+guiConnect();
+clearFrames();
+
+let cap = guiActionCapture("Preset Recall: letztes User Preset U19 laden/recallen und ggf. bestaetigen.", 120000, 8000, 60000);
+
+let loadWrites = writesByCommand(cap, 0x20);
+let readBlockWrites = writesByCommand(cap, 0x27);
+let readNameWrites = writesByCommand(cap, 0x29);
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 40, 0x40);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/cmd20-load-writes.txt", loadWrites);
+saveText("${base}/cmd20-load-payloads.txt", payloadSeries(loadWrites));
+saveText("${base}/cmd27-readblock-writes.txt", readBlockWrites);
+saveText("${base}/cmd27-readblock-payloads.txt", payloadSeries(readBlockWrites));
+saveText("${base}/cmd29-readname-writes.txt", readNameWrites);
+saveText("${base}/cmd29-readname-payloads.txt", payloadSeries(readNameWrites));
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+
+print("preset-recall-user-u19-fresh done");
+print("Saved to: ${base}");
+print(last);

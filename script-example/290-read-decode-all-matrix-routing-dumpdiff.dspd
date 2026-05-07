@@ -1,0 +1,51 @@
+# Decode FIR408 matrix routing readback by all-output route-mask dump diff.
+
+let base = "out/read-decode/all-matrix-routing-dumpdiff";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Before: all outputs routed to InA.
+write("00 01 03 3A 04 01");
+write("00 01 03 3A 05 01");
+write("00 01 03 3A 06 01");
+write("00 01 03 3A 07 01");
+write("00 01 03 3A 08 01");
+write("00 01 03 3A 09 01");
+write("00 01 03 3A 0A 01");
+write("00 01 03 3A 0B 01");
+sleep(300);
+
+let before = readSaveConfig("${base}/before-all-ina", 0x00, 0x1C);
+
+# After: all outputs routed to InD.
+write("00 01 03 3A 04 08");
+write("00 01 03 3A 05 08");
+write("00 01 03 3A 06 08");
+write("00 01 03 3A 07 08");
+write("00 01 03 3A 08 08");
+write("00 01 03 3A 09 08");
+write("00 01 03 3A 0A 08");
+write("00 01 03 3A 0B 08");
+sleep(300);
+
+let after = readSaveConfig("${base}/after-all-ind", 0x00, 0x1C);
+
+saveDiffReport("${base}/assembled-diff-report.txt", assembledData(before), assembledData(after));
+saveText("${base}/pattern-summary.txt",
+    "Matrix routing dump diff\nbefore: all outputs routed to InA, mask 0x01\nafter: all outputs routed to InD, mask 0x08\ncommand: 00 01 03 3A <output_channel> <input_mask>\n"
+);
+
+# Restore the matrix route pattern shown in the user's screenshot.
+write("00 01 03 3A 04 01");
+write("00 01 03 3A 05 02");
+write("00 01 03 3A 06 04");
+write("00 01 03 3A 07 08");
+write("00 01 03 3A 08 01");
+write("00 01 03 3A 09 02");
+write("00 01 03 3A 0A 04");
+write("00 01 03 3A 0B 08");
+
+print("all-matrix-routing-dumpdiff-done");

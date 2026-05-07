@@ -1,0 +1,81 @@
+# Decode Out8 FIR crossover generator readback storage using fresh GUI-observed 0x4B payloads.
+
+let base = "out/read-decode/out8-fir-crossover-pattern";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+let modeFir = "00 01 03 4C 0B 01";
+let restore = "00 01 0A 4B 0B 00 06 6E 00 2C 01 08 00";
+
+let typeWindowPattern = "00 01 0A 4B 0B 03 0A 6E 00 2C 01 08 00";
+let frequencyPattern = "00 01 0A 4B 0B 00 06 5A 00 A5 00 08 00";
+let frequencyHighBytePattern = "00 01 0A 4B 0B 00 06 2B 01 2C 01 08 00";
+let tapsPattern = "00 01 0A 4B 0B 00 06 6E 00 2C 01 18 00";
+let allPattern = "00 01 0A 4B 0B 02 05 5A 00 A5 00 18 00";
+
+saveText("${base}/pattern-summary.txt",
+    "Out8 FIR crossover generator read decode\n"
+    + "modeFir=${modeFir}\n"
+    + "restore=${restore}\n"
+    + "typeWindowPattern=${typeWindowPattern}\n"
+    + "frequencyPattern=${frequencyPattern}\n"
+    + "frequencyHighBytePattern=${frequencyHighBytePattern}\n"
+    + "tapsPattern=${tapsPattern}\n"
+    + "allPattern=${allPattern}\n"
+    + "Payload layout observed by GUI: 00 01 0A 4B <channel> <type> <window> <hp_lo> <hp_hi> <lp_lo> <lp_hi> <taps_lo> <taps_hi>\n"
+);
+
+write(modeFir);
+write(restore);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/baseline/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(typeWindowPattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/type-window-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(restore);
+write(frequencyPattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/frequency-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(restore);
+write(frequencyHighBytePattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/frequency-high-byte-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(restore);
+write(tapsPattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/taps-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(restore);
+write(allPattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/all-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(modeFir);
+write(restore);
+
+print("out8-fir-crossover-pattern-read-decode-done");

@@ -1,0 +1,4 @@
+Matrix gain dump diff
+before: all crosspoints -60.0dB raw=0
+after: InA=0.0dB raw=280, InB=-1.0dB raw=270, InC=-20.0dB raw=80, InD=-30.0dB raw=60
+command: 00 01 05 41 <output_channel> <input_index> <gain_lo> <gain_hi>

@@ -1,0 +1,12 @@
+tag=ind-comp-freq-series
+control=frequency
+command=0x30
+channel=0x03
+frames=61
+writes=31
+responses=30
+compAll=2
+seriesCount=2
+changingOffsets=[15, 16]
+allCompChangingOffsets=[15, 16]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x30, len=19, hex=00 01 10 30 03 00 00 E6 03 F3 01 00 00 00 00 2C 01 23 00}

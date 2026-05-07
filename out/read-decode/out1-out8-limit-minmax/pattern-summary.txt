@@ -1,0 +1,7 @@
+Output Limit min/max read decode
+ + min: ratio=0 attack=0 release=9 knee=0 threshold=0
+ + max: ratio=15 attack=998 release=2999 knee=12 threshold=220
+ + Out1 min=00 01 0C 3F 04 00 00 00 00 09 00 00 00 00 00
+Out1 max=00 01 0C 3F 04 0F 00 E6 03 B7 0B 0C 00 DC 00
+ + Out8 min=00 01 0C 3F 0B 00 00 00 00 09 00 00 00 00 00
+Out8 max=00 01 0C 3F 0B 0F 00 E6 03 B7 0B 0C 00 DC 00

@@ -1,0 +1,31 @@
+// Fresh GUI capture: Out8 FIR crossover Window dropdown with OK commits.
+
+let tag = "out8-fir-window-fresh";
+let base = "out/fir/${tag}";
+let command = 0x4B;
+let channel = 0x0B;
+
+guiConnect();
+
+let cap = guiActionCapture("Out8 FIR Crossover: Win-Werte nacheinander waehlen und nach jedem Wert OK druecken: RECT, HAMMING, BLACKMAN, SINE, SINC, NUTTALL, KAISER, BLACK-NU..., HARRIS.", 120000, 10000, 30000);
+
+let all = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+let count = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/all-4b-writes.txt", all);
+saveText("${base}/out8-4b-writes.txt", series);
+saveText("${base}/out8-4b-payloads.txt", payloadSeries(series));
+saveText("${base}/out8-4b-changing-offsets.txt", offsets);
+saveText("${base}/out8-u16-at-5.txt", u16Series(series, 5));
+saveText("${base}/out8-u16-at-6.txt", u16Series(series, 6));
+saveText("${base}/out8-highpass-u16-series.txt", u16Series(series, 7));
+saveText("${base}/out8-lowpass-u16-series.txt", u16Series(series, 9));
+saveText("${base}/out8-taps-u16-series.txt", u16Series(series, 11));
+
+print("Out8 FIR Window capture done");
+print("Out8 0x4B writes: ${count}");
+print("Saved to: ${base}");
+print(offsets);

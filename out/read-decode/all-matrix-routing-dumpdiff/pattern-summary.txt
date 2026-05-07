@@ -1,0 +1,4 @@
+Matrix routing dump diff
+before: all outputs routed to InA, mask 0x01
+after: all outputs routed to InD, mask 0x08
+command: 00 01 03 3A <output_channel> <input_mask>

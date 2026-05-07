@@ -1,0 +1,13 @@
+tag=gain-page-out1-mute-button
+control=mute
+command=0x35
+channel=0x04
+expectedState=0x01
+frames=30
+writes=15
+responses=15
+muteAll=1
+seriesCount=1
+changingOffsets=[]
+allMuteChangingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x35, len=6, hex=00 01 03 35 04 01}

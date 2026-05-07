@@ -1,0 +1,48 @@
+let tag = "out1-peq1-q-series";
+let base = "out/fader/${tag}";
+let control = "q";
+let command = 0x33;
+let channel = 0x04;
+let band = 0x00;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "On the PEQ page for Out1, change only PEQ1 Q across several values now.",
+    60000,
+    3000,
+    15000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 60, 0x40);
+let peqAll = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+
+let frames = cap.totalFrames;
+let writes = cap.writeCount;
+let responses = cap.responseCount;
+let peqAllCount = len(peqAll);
+let seriesCount = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+let allOffsets = changingOffsetsAcrossWrites(peqAll);
+
+saveText("${base}/summary.txt",
+    "tag=${tag}\ncontrol=${control}\ncommand=0x33\nchannel=0x04\nband=0x00\nexpectedOffset=10\nframes=${frames}\nwrites=${writes}\nresponses=${responses}\npeqAll=${peqAllCount}\nseriesCount=${seriesCount}\nchangingOffsets=${offsets}\nallPeqChangingOffsets=${allOffsets}\nlastInteresting=${last}\n"
+);
+
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+saveText("${base}/peq-all-payload-series.txt", payloadSeries(peqAll));
+saveText("${base}/peq-all-changing-offsets.txt", allOffsets);
+saveText("${base}/peq-out1-payload-series.txt", payloadSeries(series));
+saveText("${base}/peq-out1-changing-offsets.txt", offsets);
+saveText("${base}/peq-out1-u16-at-6.txt", u16Series(series, 6));
+saveText("${base}/peq-out1-u16-at-8.txt", u16Series(series, 8));
+saveText("${base}/peq-out1-u16-at-10.txt", u16Series(series, 10));
+saveText("${base}/peq-out1-u16-at-11.txt", u16Series(series, 11));
+
+print("done");
+print("saved=${base}");
+print("seriesCount=${seriesCount}");
+print(offsets);

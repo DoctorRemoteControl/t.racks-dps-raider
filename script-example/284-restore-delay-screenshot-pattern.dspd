@@ -1,0 +1,21 @@
+# Restore the alternating delay min/max state shown in the user's delay screenshot.
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+write("00 01 04 38 00 00 00");
+write("00 01 04 38 01 00 FF");
+write("00 01 04 38 02 00 00");
+write("00 01 04 38 03 00 FF");
+write("00 01 04 38 04 00 00");
+write("00 01 04 38 05 00 FF");
+write("00 01 04 38 06 00 00");
+write("00 01 04 38 07 00 FF");
+write("00 01 04 38 08 00 00");
+write("00 01 04 38 09 00 FF");
+write("00 01 04 38 0A 00 00");
+write("00 01 04 38 0B 00 FF");
+
+print("delay-screenshot-pattern-restored");

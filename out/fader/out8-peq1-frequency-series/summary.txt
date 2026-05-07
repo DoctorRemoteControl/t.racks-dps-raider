@@ -1,0 +1,14 @@
+tag=out8-peq1-frequency-series
+control=frequency
+command=0x33
+channel=0x0B
+band=0x00
+expectedOffset=8
+frames=130
+writes=65
+responses=65
+peqAll=16
+seriesCount=16
+changingOffsets=[8, 9]
+allPeqChangingOffsets=[8, 9]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 0B 00 78 00 2C 01 23 00 00}

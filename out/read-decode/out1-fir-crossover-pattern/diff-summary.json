@@ -1,0 +1,82 @@
+[
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x0B",
+    "OffsetDec": 51,
+    "OffsetCoord": "0x38",
+    "Before": "0x03",
+    "After": "0x02"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x0B",
+    "OffsetDec": 52,
+    "OffsetCoord": "0x39",
+    "Before": "0x0A",
+    "After": "0x05"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x0B",
+    "OffsetDec": 53,
+    "OffsetCoord": "0x3A",
+    "Before": "0x91",
+    "After": "0x5A"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x0C",
+    "OffsetDec": 5,
+    "OffsetCoord": "0x0A",
+    "Before": "0x92",
+    "After": "0xA5"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x0C",
+    "OffsetDec": 7,
+    "OffsetCoord": "0x0C",
+    "Before": "0x08",
+    "After": "0x18"
+  },
+  {
+    "Pattern": "type-window-pattern",
+    "Block": "0x0B",
+    "OffsetDec": 51,
+    "OffsetCoord": "0x38",
+    "Before": "0x03",
+    "After": "0x01"
+  },
+  {
+    "Pattern": "type-window-pattern",
+    "Block": "0x0B",
+    "OffsetDec": 52,
+    "OffsetCoord": "0x39",
+    "Before": "0x0A",
+    "After": "0x02"
+  },
+  {
+    "Pattern": "frequency-pattern",
+    "Block": "0x0B",
+    "OffsetDec": 53,
+    "OffsetCoord": "0x3A",
+    "Before": "0x91",
+    "After": "0x5A"
+  },
+  {
+    "Pattern": "frequency-pattern",
+    "Block": "0x0C",
+    "OffsetDec": 5,
+    "OffsetCoord": "0x0A",
+    "Before": "0x92",
+    "After": "0xA5"
+  },
+  {
+    "Pattern": "taps-pattern",
+    "Block": "0x0C",
+    "OffsetDec": 7,
+    "OffsetCoord": "0x0C",
+    "Before": "0x08",
+    "After": "0x18"
+  }
+]

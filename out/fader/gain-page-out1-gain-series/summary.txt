@@ -1,0 +1,12 @@
+tag=gain-page-out1-gain-series
+control=gain
+command=0x34
+channel=0x04
+frames=59
+writes=30
+responses=29
+gainAll=7
+seriesCount=7
+changingOffsets=[5, 6]
+allGainChangingOffsets=[5, 6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x34, len=7, hex=00 01 04 34 04 00 00}

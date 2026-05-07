@@ -1,0 +1,50 @@
+let tag = "ind-comp-knee-series";
+let base = "out/fader/${tag}";
+let control = "knee";
+let command = 0x30;
+let channel = 0x03;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "On the Comp page with InD selected, move only the Knee fader slowly across several positions now.",
+    60000,
+    3000,
+    15000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 60, 0x40);
+let compAll = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+
+let frames = cap.totalFrames;
+let writes = cap.writeCount;
+let responses = cap.responseCount;
+let compAllCount = len(compAll);
+let seriesCount = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+let allOffsets = changingOffsetsAcrossWrites(compAll);
+
+saveText("${base}/summary.txt",
+    "tag=${tag}\ncontrol=${control}\ncommand=0x30\nchannel=0x03\nframes=${frames}\nwrites=${writes}\nresponses=${responses}\ncompAll=${compAllCount}\nseriesCount=${seriesCount}\nchangingOffsets=${offsets}\nallCompChangingOffsets=${allOffsets}\nlastInteresting=${last}\n"
+);
+
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+saveText("${base}/comp-all-payload-series.txt", payloadSeries(compAll));
+saveText("${base}/comp-all-changing-offsets.txt", allOffsets);
+saveText("${base}/comp-ind-payload-series.txt", payloadSeries(series));
+saveText("${base}/comp-ind-changing-offsets.txt", offsets);
+saveText("${base}/comp-ind-u16-at-5.txt", u16Series(series, 5));
+saveText("${base}/comp-ind-u16-at-7.txt", u16Series(series, 7));
+saveText("${base}/comp-ind-u16-at-9.txt", u16Series(series, 9));
+saveText("${base}/comp-ind-u16-at-11.txt", u16Series(series, 11));
+saveText("${base}/comp-ind-u16-at-13.txt", u16Series(series, 13));
+saveText("${base}/comp-ind-u16-at-15.txt", u16Series(series, 15));
+saveText("${base}/comp-ind-u16-at-17.txt", u16Series(series, 17));
+
+print("done");
+print("saved=${base}");
+print("seriesCount=${seriesCount}");
+print(offsets);

@@ -1,0 +1,13 @@
+tag=matrix-route-out8-button-v2
+control=route_button
+command=0x3A
+output=0x0B
+expected=Out8<-InA
+frames=102
+writes=51
+responses=51
+routeAll=1
+seriesCount=1
+changingOffsets=[]
+allRouteChangingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3A, len=6, hex=00 01 03 3A 0B 09}

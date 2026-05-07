@@ -21,6 +21,7 @@ public final class DspLibLookup {
     private final List<String> peqTypes;
     private final List<String> crossoverSlopes;
     private final List<String> compressorRatios;
+    private final Map<Integer, String> presetSlotByIndex;
     private final Map<Integer, String> testToneSourceByIndex;
     private final Map<Integer, String> testToneFreqByIndex;
 
@@ -34,6 +35,7 @@ public final class DspLibLookup {
         this.peqTypes = textArray(root.at("/enums/peq_types"));
         this.crossoverSlopes = textArray(root.at("/enums/crossover_slopes"));
         this.compressorRatios = textArray(root.at("/enums/compressor_ratios"));
+        this.presetSlotByIndex = invertHexKeyMap(root.at("/parameters/preset_management/write/load/preset_index_mapping"));
         this.testToneSourceByIndex = invertHexKeyMap(root.at("/parameters/test_tone_generator/write/source_index_mapping"));
         this.testToneFreqByIndex = invertSelectorMap(root.at("/value_models/test_tone_sine_frequency/selector_mapping"));
     }
@@ -118,6 +120,10 @@ public final class DspLibLookup {
 
     public String testToneFrequency(int index) {
         return testToneFreqByIndex.getOrDefault(index, "freq#" + index);
+    }
+
+    public String presetSlot(int index) {
+        return presetSlotByIndex.getOrDefault(index, "preset#" + index);
     }
 
     public String statusAt(String jsonPointer) {

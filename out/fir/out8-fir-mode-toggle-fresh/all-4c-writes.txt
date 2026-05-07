@@ -1,0 +1,1 @@
+[sniff{dir=PC_TO_DSP, cmd=0x4C, len=6, hex=00 01 03 4C 0B 00}, sniff{dir=PC_TO_DSP, cmd=0x4C, len=6, hex=00 01 03 4C 0B 01}]

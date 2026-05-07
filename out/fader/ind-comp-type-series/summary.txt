@@ -1,0 +1,12 @@
+tag=ind-comp-type-series
+control=type
+command=0x30
+channel=0x03
+frames=71
+writes=36
+responses=35
+compAll=3
+seriesCount=3
+changingOffsets=[18]
+allCompChangingOffsets=[18]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x30, len=19, hex=00 01 10 30 03 00 00 E6 03 B7 0B 0C 00 00 00 2C 01 23 09}

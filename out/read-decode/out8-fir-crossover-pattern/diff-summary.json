@@ -1,0 +1,114 @@
+[
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 7,
+    "OffsetHex": "0x07",
+    "Before": "0x00",
+    "After": "0x02"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 8,
+    "OffsetHex": "0x08",
+    "Before": "0x06",
+    "After": "0x05"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 9,
+    "OffsetHex": "0x09",
+    "Before": "0x6E",
+    "After": "0x5A"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 11,
+    "OffsetHex": "0x0B",
+    "Before": "0x2C",
+    "After": "0xA5"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 12,
+    "OffsetHex": "0x0C",
+    "Before": "0x01",
+    "After": "0x00"
+  },
+  {
+    "Pattern": "all-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 13,
+    "OffsetHex": "0x0D",
+    "Before": "0x08",
+    "After": "0x18"
+  },
+  {
+    "Pattern": "type-window-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 7,
+    "OffsetHex": "0x07",
+    "Before": "0x00",
+    "After": "0x03"
+  },
+  {
+    "Pattern": "type-window-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 8,
+    "OffsetHex": "0x08",
+    "Before": "0x06",
+    "After": "0x0A"
+  },
+  {
+    "Pattern": "frequency-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 9,
+    "OffsetHex": "0x09",
+    "Before": "0x6E",
+    "After": "0x5A"
+  },
+  {
+    "Pattern": "frequency-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 11,
+    "OffsetHex": "0x0B",
+    "Before": "0x2C",
+    "After": "0xA5"
+  },
+  {
+    "Pattern": "frequency-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 12,
+    "OffsetHex": "0x0C",
+    "Before": "0x01",
+    "After": "0x00"
+  },
+  {
+    "Pattern": "frequency-high-byte-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 9,
+    "OffsetHex": "0x09",
+    "Before": "0x6E",
+    "After": "0x2B"
+  },
+  {
+    "Pattern": "frequency-high-byte-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 10,
+    "OffsetHex": "0x0A",
+    "Before": "0x00",
+    "After": "0x01"
+  },
+  {
+    "Pattern": "taps-pattern",
+    "Block": "0x1B",
+    "OffsetDec": 13,
+    "OffsetHex": "0x0D",
+    "Before": "0x08",
+    "After": "0x18"
+  }
+]

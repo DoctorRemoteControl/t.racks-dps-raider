@@ -1,0 +1,12 @@
+tag=out1-iir-highpass-frequency-series
+control=highpass_frequency
+command=0x32
+channel=0x04
+expectedOffsets=5,6
+frames=164
+writes=82
+responses=82
+allCommandCount=42
+seriesCount=42
+changingOffsets=[5, 6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x32, len=9, hex=00 01 06 32 04 00 00 00 0A}

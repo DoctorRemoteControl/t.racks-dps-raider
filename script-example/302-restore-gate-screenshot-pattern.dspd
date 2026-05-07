@@ -1,0 +1,23 @@
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Screenshot pattern:
+# InA: threshold +0.0 dB, attack 999 ms, hold 999 ms, release 3000 ms
+write("00 01 0A 3E 00 E6 03 B7 0B E6 03 B4 00");
+sleep(80);
+
+# InB: threshold -90.0 dB, attack 1 ms, hold 10 ms, release 10 ms
+write("00 01 0A 3E 01 00 00 09 00 09 00 00 00");
+sleep(80);
+
+# InC: threshold +0.0 dB, attack 999 ms, hold 10 ms, release 10 ms
+write("00 01 0A 3E 02 E6 03 09 00 09 00 B4 00");
+sleep(80);
+
+# InD: threshold -90.0 dB, attack 1 ms, hold 10 ms, release 10 ms
+write("00 01 0A 3E 03 00 00 09 00 09 00 00 00");
+sleep(150);
+
+print("gate-screenshot-pattern-restored");

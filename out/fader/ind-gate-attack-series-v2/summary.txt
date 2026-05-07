@@ -1,0 +1,13 @@
+tag=ind-gate-attack-series-v2
+control=attack
+command=0x3E
+channel=0x03
+expectedOffset=5
+frames=55
+writes=28
+responses=27
+gateAll=7
+seriesCount=7
+changingOffsets=[5, 6]
+allGateChangingOffsets=[5, 6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3E, len=13, hex=00 01 0A 3E 03 E6 03 09 00 09 00 B4 00}

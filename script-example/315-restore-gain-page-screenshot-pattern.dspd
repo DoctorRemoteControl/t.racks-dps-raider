@@ -1,0 +1,48 @@
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Restore all input and output gain faders to +0.0 dB, raw 280 = 0x0118.
+write("00 01 04 34 00 18 01"); sleep(40);
+write("00 01 04 34 01 18 01"); sleep(40);
+write("00 01 04 34 02 18 01"); sleep(40);
+write("00 01 04 34 03 18 01"); sleep(40);
+write("00 01 04 34 04 18 01"); sleep(40);
+write("00 01 04 34 05 18 01"); sleep(40);
+write("00 01 04 34 06 18 01"); sleep(40);
+write("00 01 04 34 07 18 01"); sleep(40);
+write("00 01 04 34 08 18 01"); sleep(40);
+write("00 01 04 34 09 18 01"); sleep(40);
+write("00 01 04 34 0A 18 01"); sleep(40);
+write("00 01 04 34 0B 18 01"); sleep(40);
+
+# Restore mute state to normal/unmuted for all channels.
+write("00 01 03 35 00 00"); sleep(40);
+write("00 01 03 35 01 00"); sleep(40);
+write("00 01 03 35 02 00"); sleep(40);
+write("00 01 03 35 03 00"); sleep(40);
+write("00 01 03 35 04 00"); sleep(40);
+write("00 01 03 35 05 00"); sleep(40);
+write("00 01 03 35 06 00"); sleep(40);
+write("00 01 03 35 07 00"); sleep(40);
+write("00 01 03 35 08 00"); sleep(40);
+write("00 01 03 35 09 00"); sleep(40);
+write("00 01 03 35 0A 00"); sleep(40);
+write("00 01 03 35 0B 00"); sleep(40);
+
+# Restore phase/polarity state to Normal/0 degrees for all channels.
+write("00 01 03 36 00 00"); sleep(40);
+write("00 01 03 36 01 00"); sleep(40);
+write("00 01 03 36 02 00"); sleep(40);
+write("00 01 03 36 03 00"); sleep(40);
+write("00 01 03 36 04 00"); sleep(40);
+write("00 01 03 36 05 00"); sleep(40);
+write("00 01 03 36 06 00"); sleep(40);
+write("00 01 03 36 07 00"); sleep(40);
+write("00 01 03 36 08 00"); sleep(40);
+write("00 01 03 36 09 00"); sleep(40);
+write("00 01 03 36 0A 00"); sleep(40);
+write("00 01 03 36 0B 00"); sleep(40);
+
+print("gain-page-screenshot-pattern-restored");

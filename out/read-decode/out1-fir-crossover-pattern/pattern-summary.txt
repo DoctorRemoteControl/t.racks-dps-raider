@@ -1,0 +1,8 @@
+Out1 FIR crossover generator read decode
+ + modeFir=00 01 03 4C 04 01
+ + restore=00 01 0A 4B 04 03 0A 91 00 92 00 08 00
+ + typeWindowPattern=00 01 0A 4B 04 01 02 91 00 92 00 08 00
+ + frequencyPattern=00 01 0A 4B 04 03 0A 5A 00 A5 00 08 00
+ + tapsPattern=00 01 0A 4B 04 03 0A 91 00 92 00 18 00
+ + allPattern=00 01 0A 4B 04 02 05 5A 00 A5 00 18 00
+ + Payload layout observed by GUI: 00 01 0A 4B <channel> <type> <window> <hp_lo> <hp_hi> <lp_lo> <lp_hi> <taps_lo> <taps_hi>

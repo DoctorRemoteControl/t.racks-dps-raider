@@ -1,0 +1,12 @@
+tag=out8-delay-series-v2
+control=delay
+command=0x38
+channel=0x0B
+frames=100
+writes=50
+responses=50
+delayAll=27
+seriesCount=27
+changingOffsets=[5, 6]
+allDelayChangingOffsets=[5, 6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x38, len=7, hex=00 01 04 38 0B 00 FF}

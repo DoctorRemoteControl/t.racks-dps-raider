@@ -1,0 +1,47 @@
+# Read config and safe 0x56 probes after Out8 External FIR import.
+
+let tag = "out8-external-fir-import";
+let base = "out/read-decode/${tag}";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+let after = readSaveConfig("${base}/after", 0x00, 0x1F);
+saveText("${base}/after-assembled.hex.txt", hex(assembledData(after)));
+
+let offsets = "0,13,26,39,52,255";
+
+let s00 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-00", 0x00, offsets, 1);
+let s01 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-01", 0x01, offsets, 1);
+let s02 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-02", 0x02, offsets, 1);
+let s03 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-03", 0x03, offsets, 1);
+let s04 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-04", 0x04, offsets, 1);
+let s05 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-05", 0x05, offsets, 1);
+let s06 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-06", 0x06, offsets, 1);
+let s07 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-07", 0x07, offsets, 1);
+let s08 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-08", 0x08, offsets, 1);
+let s09 = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-09", 0x09, offsets, 1);
+let s0a = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-0A", 0x0A, offsets, 1);
+let s0b = fir408Cmd56ReadonlyOffsets("${base}/cmd56-selector-0B", 0x0B, offsets, 1);
+
+saveText("${base}/cmd56-selector-summary.md",
+    "# Out8 External FIR 0x56 Selector Probe\n\n"
+    + "Offsets: ${offsets}\n\n"
+    + "## Selector 0x00\n" + s00 + "\n\n"
+    + "## Selector 0x01\n" + s01 + "\n\n"
+    + "## Selector 0x02\n" + s02 + "\n\n"
+    + "## Selector 0x03\n" + s03 + "\n\n"
+    + "## Selector 0x04\n" + s04 + "\n\n"
+    + "## Selector 0x05\n" + s05 + "\n\n"
+    + "## Selector 0x06\n" + s06 + "\n\n"
+    + "## Selector 0x07\n" + s07 + "\n\n"
+    + "## Selector 0x08\n" + s08 + "\n\n"
+    + "## Selector 0x09\n" + s09 + "\n\n"
+    + "## Selector 0x0A\n" + s0a + "\n\n"
+    + "## Selector 0x0B\n" + s0b + "\n"
+);
+
+print("out8-external-fir-after-read-and-probe-done");
+print("saved=${base}");

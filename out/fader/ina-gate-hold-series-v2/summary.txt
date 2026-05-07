@@ -1,0 +1,13 @@
+tag=ina-gate-hold-series-v2
+control=hold
+command=0x3E
+channel=0x00
+expectedOffset=9
+frames=71
+writes=36
+responses=35
+gateAll=15
+seriesCount=15
+changingOffsets=[9, 10]
+allGateChangingOffsets=[9, 10]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3E, len=13, hex=00 01 0A 3E 00 00 00 B7 0B 09 00 00 00}

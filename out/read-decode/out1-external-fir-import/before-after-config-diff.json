@@ -1,0 +1,79 @@
+[
+  {
+    "Abs": 596,
+    "AbsHex": "0x254",
+    "Before": "0x03",
+    "After": "0x04",
+    "Char": "."
+  },
+  {
+    "Abs": 602,
+    "AbsHex": "0x25A",
+    "Before": "0x08",
+    "After": "0x00",
+    "Char": "."
+  },
+  {
+    "Abs": 603,
+    "AbsHex": "0x25B",
+    "Before": "0x00",
+    "After": "0x02",
+    "Char": "."
+  },
+  {
+    "Abs": 1492,
+    "AbsHex": "0x5D4",
+    "Before": "0x4F",
+    "After": "0x66",
+    "Char": "f"
+  },
+  {
+    "Abs": 1493,
+    "AbsHex": "0x5D5",
+    "Before": "0x75",
+    "After": "0x69",
+    "Char": "i"
+  },
+  {
+    "Abs": 1494,
+    "AbsHex": "0x5D6",
+    "Before": "0x74",
+    "After": "0x72",
+    "Char": "r"
+  },
+  {
+    "Abs": 1495,
+    "AbsHex": "0x5D7",
+    "Before": "0x31",
+    "After": "0x5F",
+    "Char": "_"
+  },
+  {
+    "Abs": 1496,
+    "AbsHex": "0x5D8",
+    "Before": "0x46",
+    "After": "0x35",
+    "Char": "5"
+  },
+  {
+    "Abs": 1497,
+    "AbsHex": "0x5D9",
+    "Before": "0x69",
+    "After": "0x31",
+    "Char": "1"
+  },
+  {
+    "Abs": 1498,
+    "AbsHex": "0x5DA",
+    "Before": "0x6C",
+    "After": "0x32",
+    "Char": "2"
+  },
+  {
+    "Abs": 1499,
+    "AbsHex": "0x5DB",
+    "Before": "0x65",
+    "After": "0x5F",
+    "Char": "_"
+  }
+]

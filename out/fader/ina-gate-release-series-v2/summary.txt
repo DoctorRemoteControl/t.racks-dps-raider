@@ -1,0 +1,13 @@
+tag=ina-gate-release-series-v2
+control=release
+command=0x3E
+channel=0x00
+expectedOffset=7
+frames=44
+writes=22
+responses=22
+gateAll=6
+seriesCount=6
+changingOffsets=[7, 8]
+allGateChangingOffsets=[7, 8]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3E, len=13, hex=00 01 0A 3E 00 00 00 09 00 09 00 00 00}

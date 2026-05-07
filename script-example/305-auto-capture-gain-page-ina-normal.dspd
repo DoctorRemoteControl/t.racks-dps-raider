@@ -1,0 +1,44 @@
+let tag = "gain-page-ina-normal-button";
+let base = "out/fader/${tag}";
+let control = "normal";
+let command = 0x36;
+let channel = 0x00;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "On the Gain page, click only the InA Normal button once.",
+    60000,
+    2500,
+    12000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 40, 0x40);
+let normalAll = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+
+let frames = cap.totalFrames;
+let writes = cap.writeCount;
+let responses = cap.responseCount;
+let normalAllCount = len(normalAll);
+let seriesCount = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+let allOffsets = changingOffsetsAcrossWrites(normalAll);
+
+saveText("${base}/summary.txt",
+    "tag=${tag}\ncontrol=${control}\ncommand=0x36\nchannel=0x00\nexpectedState=0x00\nframes=${frames}\nwrites=${writes}\nresponses=${responses}\nnormalAll=${normalAllCount}\nseriesCount=${seriesCount}\nchangingOffsets=${offsets}\nallNormalChangingOffsets=${allOffsets}\nlastInteresting=${last}\n"
+);
+
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+saveText("${base}/normal-all-payload-series.txt", payloadSeries(normalAll));
+saveText("${base}/normal-all-changing-offsets.txt", allOffsets);
+saveText("${base}/normal-ina-payload-series.txt", payloadSeries(series));
+saveText("${base}/normal-ina-changing-offsets.txt", offsets);
+saveText("${base}/normal-ina-u16-at-4.txt", u16Series(series, 4));
+
+print("done");
+print("saved=${base}");
+print("seriesCount=${seriesCount}");
+print(offsets);

@@ -1,0 +1,14 @@
+tag=ina-peq1-bypass-series-v2
+control=bypass
+command=0x33
+channel=0x00
+band=0x00
+expectedOffset=12
+frames=74
+writes=37
+responses=37
+peqAll=1
+seriesCount=1
+changingOffsets=[]
+allPeqChangingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 00 00 F0 00 18 00 23 07 01}

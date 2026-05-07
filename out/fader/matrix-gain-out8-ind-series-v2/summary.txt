@@ -1,0 +1,13 @@
+tag=matrix-gain-out8-ind-series-v2
+control=matrix_gain
+command=0x41
+output=0x0B
+expected=Out8<-InD
+frames=804
+writes=402
+responses=402
+gainAll=280
+seriesCount=280
+changingOffsets=[6, 7]
+allGainChangingOffsets=[6, 7]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x41, len=8, hex=00 01 05 41 0B 03 00 00}

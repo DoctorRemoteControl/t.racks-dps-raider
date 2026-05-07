@@ -1,0 +1,227 @@
+# Confirm FIR408 delay u16 start offsets with a non-zero low byte (20.0 ms = raw 1920 = 0x0780).
+# Blocks come from the all-block 0 -> 680 ms search in script 282.
+
+let base = "out/read-decode/all-delay-20ms-target-blocks";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+let inaMin = "00 01 04 38 00 00 00";
+let ina20 = "00 01 04 38 00 80 07";
+let inbMin = "00 01 04 38 01 00 00";
+let inb20 = "00 01 04 38 01 80 07";
+let incMin = "00 01 04 38 02 00 00";
+let inc20 = "00 01 04 38 02 80 07";
+let indMin = "00 01 04 38 03 00 00";
+let ind20 = "00 01 04 38 03 80 07";
+let out1Min = "00 01 04 38 04 00 00";
+let out1Max = "00 01 04 38 04 00 FF";
+let out1_20 = "00 01 04 38 04 80 07";
+let out2Max = "00 01 04 38 05 00 FF";
+let out2Min = "00 01 04 38 05 00 00";
+let out2_20 = "00 01 04 38 05 80 07";
+let out3Min = "00 01 04 38 06 00 00";
+let out3_20 = "00 01 04 38 06 80 07";
+let out4Max = "00 01 04 38 07 00 FF";
+let out4Min = "00 01 04 38 07 00 00";
+let out4_20 = "00 01 04 38 07 80 07";
+let out5Min = "00 01 04 38 08 00 00";
+let out5_20 = "00 01 04 38 08 80 07";
+let out6Max = "00 01 04 38 09 00 FF";
+let out6Min = "00 01 04 38 09 00 00";
+let out6_20 = "00 01 04 38 09 80 07";
+let out7Min = "00 01 04 38 0A 00 00";
+let out7_20 = "00 01 04 38 0A 80 07";
+let out8Max = "00 01 04 38 0B 00 FF";
+let out8Min = "00 01 04 38 0B 00 00";
+let out8_20 = "00 01 04 38 0B 80 07";
+
+saveText("${base}/pattern-summary.txt",
+    "Delay 20ms target-block confirmation\nmin raw=0 = 0.000 ms\n20ms raw=1920 = 0x0780\n"
+);
+
+write(inaMin);
+sleep(150);
+let beforeIna = readBlock(3);
+write(ina20);
+sleep(150);
+let afterIna = readBlock(3);
+saveText("${base}/ina/block-3-before.hex.txt", beforeIna.payloadHex);
+saveText("${base}/ina/block-3-after.hex.txt", afterIna.payloadHex);
+saveText("${base}/ina/block-3-changed-offsets.txt", changedOffsets(beforeIna.payload, afterIna.payload));
+saveText("${base}/ina/block-3-diff-u16le.txt", diffU16le(beforeIna.payload, afterIna.payload));
+saveDiffReport("${base}/ina/block-3-diff-report.txt", beforeIna.payload, afterIna.payload);
+print("ina block 3");
+print(changedOffsets(beforeIna.payload, afterIna.payload));
+
+write(inbMin);
+sleep(150);
+let beforeInb = readBlock(5);
+write(inb20);
+sleep(150);
+let afterInb = readBlock(5);
+saveText("${base}/inb/block-5-before.hex.txt", beforeInb.payloadHex);
+saveText("${base}/inb/block-5-after.hex.txt", afterInb.payloadHex);
+saveText("${base}/inb/block-5-changed-offsets.txt", changedOffsets(beforeInb.payload, afterInb.payload));
+saveText("${base}/inb/block-5-diff-u16le.txt", diffU16le(beforeInb.payload, afterInb.payload));
+saveDiffReport("${base}/inb/block-5-diff-report.txt", beforeInb.payload, afterInb.payload);
+print("inb block 5");
+print(changedOffsets(beforeInb.payload, afterInb.payload));
+
+write(incMin);
+sleep(150);
+let beforeInc = readBlock(8);
+write(inc20);
+sleep(150);
+let afterInc = readBlock(8);
+saveText("${base}/inc/block-8-before.hex.txt", beforeInc.payloadHex);
+saveText("${base}/inc/block-8-after.hex.txt", afterInc.payloadHex);
+saveText("${base}/inc/block-8-changed-offsets.txt", changedOffsets(beforeInc.payload, afterInc.payload));
+saveText("${base}/inc/block-8-diff-u16le.txt", diffU16le(beforeInc.payload, afterInc.payload));
+saveDiffReport("${base}/inc/block-8-diff-report.txt", beforeInc.payload, afterInc.payload);
+print("inc block 8");
+print(changedOffsets(beforeInc.payload, afterInc.payload));
+
+write(indMin);
+sleep(150);
+let beforeInd = readBlock(11);
+write(ind20);
+sleep(150);
+let afterInd = readBlock(11);
+saveText("${base}/ind/block-11-before.hex.txt", beforeInd.payloadHex);
+saveText("${base}/ind/block-11-after.hex.txt", afterInd.payloadHex);
+saveText("${base}/ind/block-11-changed-offsets.txt", changedOffsets(beforeInd.payload, afterInd.payload));
+saveText("${base}/ind/block-11-diff-u16le.txt", diffU16le(beforeInd.payload, afterInd.payload));
+saveDiffReport("${base}/ind/block-11-diff-report.txt", beforeInd.payload, afterInd.payload);
+print("ind block 11");
+print(changedOffsets(beforeInd.payload, afterInd.payload));
+
+write(out1Min);
+sleep(150);
+let beforeOut1 = readBlock(13);
+write(out1_20);
+sleep(150);
+let afterOut1 = readBlock(13);
+saveText("${base}/out1/block-13-before.hex.txt", beforeOut1.payloadHex);
+saveText("${base}/out1/block-13-after.hex.txt", afterOut1.payloadHex);
+saveText("${base}/out1/block-13-changed-offsets.txt", changedOffsets(beforeOut1.payload, afterOut1.payload));
+saveText("${base}/out1/block-13-diff-u16le.txt", diffU16le(beforeOut1.payload, afterOut1.payload));
+saveDiffReport("${base}/out1/block-13-diff-report.txt", beforeOut1.payload, afterOut1.payload);
+print("out1 block 13");
+print(changedOffsets(beforeOut1.payload, afterOut1.payload));
+
+write(out2Min);
+sleep(150);
+let beforeOut2 = readBlock(15);
+write(out2_20);
+sleep(150);
+let afterOut2 = readBlock(15);
+saveText("${base}/out2/block-15-before.hex.txt", beforeOut2.payloadHex);
+saveText("${base}/out2/block-15-after.hex.txt", afterOut2.payloadHex);
+saveText("${base}/out2/block-15-changed-offsets.txt", changedOffsets(beforeOut2.payload, afterOut2.payload));
+saveText("${base}/out2/block-15-diff-u16le.txt", diffU16le(beforeOut2.payload, afterOut2.payload));
+saveDiffReport("${base}/out2/block-15-diff-report.txt", beforeOut2.payload, afterOut2.payload);
+print("out2 block 15");
+print(changedOffsets(beforeOut2.payload, afterOut2.payload));
+
+write(out3Min);
+sleep(150);
+let beforeOut3 = readBlock(17);
+write(out3_20);
+sleep(150);
+let afterOut3 = readBlock(17);
+saveText("${base}/out3/block-17-before.hex.txt", beforeOut3.payloadHex);
+saveText("${base}/out3/block-17-after.hex.txt", afterOut3.payloadHex);
+saveText("${base}/out3/block-17-changed-offsets.txt", changedOffsets(beforeOut3.payload, afterOut3.payload));
+saveText("${base}/out3/block-17-diff-u16le.txt", diffU16le(beforeOut3.payload, afterOut3.payload));
+saveDiffReport("${base}/out3/block-17-diff-report.txt", beforeOut3.payload, afterOut3.payload);
+print("out3 block 17");
+print(changedOffsets(beforeOut3.payload, afterOut3.payload));
+
+write(out4Min);
+sleep(150);
+let beforeOut4 = readBlock(19);
+write(out4_20);
+sleep(150);
+let afterOut4 = readBlock(19);
+saveText("${base}/out4/block-19-before.hex.txt", beforeOut4.payloadHex);
+saveText("${base}/out4/block-19-after.hex.txt", afterOut4.payloadHex);
+saveText("${base}/out4/block-19-changed-offsets.txt", changedOffsets(beforeOut4.payload, afterOut4.payload));
+saveText("${base}/out4/block-19-diff-u16le.txt", diffU16le(beforeOut4.payload, afterOut4.payload));
+saveDiffReport("${base}/out4/block-19-diff-report.txt", beforeOut4.payload, afterOut4.payload);
+print("out4 block 19");
+print(changedOffsets(beforeOut4.payload, afterOut4.payload));
+
+write(out5Min);
+sleep(150);
+let beforeOut5 = readBlock(22);
+write(out5_20);
+sleep(150);
+let afterOut5 = readBlock(22);
+saveText("${base}/out5/block-22-before.hex.txt", beforeOut5.payloadHex);
+saveText("${base}/out5/block-22-after.hex.txt", afterOut5.payloadHex);
+saveText("${base}/out5/block-22-changed-offsets.txt", changedOffsets(beforeOut5.payload, afterOut5.payload));
+saveText("${base}/out5/block-22-diff-u16le.txt", diffU16le(beforeOut5.payload, afterOut5.payload));
+saveDiffReport("${base}/out5/block-22-diff-report.txt", beforeOut5.payload, afterOut5.payload);
+print("out5 block 22");
+print(changedOffsets(beforeOut5.payload, afterOut5.payload));
+
+write(out6Min);
+sleep(150);
+let beforeOut6 = readBlock(24);
+write(out6_20);
+sleep(150);
+let afterOut6 = readBlock(24);
+saveText("${base}/out6/block-24-before.hex.txt", beforeOut6.payloadHex);
+saveText("${base}/out6/block-24-after.hex.txt", afterOut6.payloadHex);
+saveText("${base}/out6/block-24-changed-offsets.txt", changedOffsets(beforeOut6.payload, afterOut6.payload));
+saveText("${base}/out6/block-24-diff-u16le.txt", diffU16le(beforeOut6.payload, afterOut6.payload));
+saveDiffReport("${base}/out6/block-24-diff-report.txt", beforeOut6.payload, afterOut6.payload);
+print("out6 block 24");
+print(changedOffsets(beforeOut6.payload, afterOut6.payload));
+
+write(out7Min);
+sleep(150);
+let beforeOut7 = readBlock(26);
+write(out7_20);
+sleep(150);
+let afterOut7 = readBlock(26);
+saveText("${base}/out7/block-26-before.hex.txt", beforeOut7.payloadHex);
+saveText("${base}/out7/block-26-after.hex.txt", afterOut7.payloadHex);
+saveText("${base}/out7/block-26-changed-offsets.txt", changedOffsets(beforeOut7.payload, afterOut7.payload));
+saveText("${base}/out7/block-26-diff-u16le.txt", diffU16le(beforeOut7.payload, afterOut7.payload));
+saveDiffReport("${base}/out7/block-26-diff-report.txt", beforeOut7.payload, afterOut7.payload);
+print("out7 block 26");
+print(changedOffsets(beforeOut7.payload, afterOut7.payload));
+
+write(out8Min);
+sleep(150);
+let beforeOut8 = readBlock(28);
+write(out8_20);
+sleep(150);
+let afterOut8 = readBlock(28);
+saveText("${base}/out8/block-28-before.hex.txt", beforeOut8.payloadHex);
+saveText("${base}/out8/block-28-after.hex.txt", afterOut8.payloadHex);
+saveText("${base}/out8/block-28-changed-offsets.txt", changedOffsets(beforeOut8.payload, afterOut8.payload));
+saveText("${base}/out8/block-28-diff-u16le.txt", diffU16le(beforeOut8.payload, afterOut8.payload));
+saveDiffReport("${base}/out8/block-28-diff-report.txt", beforeOut8.payload, afterOut8.payload);
+print("out8 block 28");
+print(changedOffsets(beforeOut8.payload, afterOut8.payload));
+
+# Restore the alternating min/max state shown in the user's delay screenshot.
+write(inaMin);
+write("00 01 04 38 01 00 FF");
+write(incMin);
+write("00 01 04 38 03 00 FF");
+write(out1Min);
+write("00 01 04 38 05 00 FF");
+write(out3Min);
+write("00 01 04 38 07 00 FF");
+write(out5Min);
+write("00 01 04 38 09 00 FF");
+write(out7Min);
+write("00 01 04 38 0B 00 FF");
+
+print("all-delay-20ms-target-blocks-done");

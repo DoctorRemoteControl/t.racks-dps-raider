@@ -1,0 +1,124 @@
+# Decode FIR408 matrix gain readback by all-crosspoint gain dump diff.
+
+let base = "out/read-decode/all-matrix-gains-dumpdiff";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Before: all matrix gains at -60.0 dB raw 0.
+write("00 01 05 41 04 00 00 00");
+write("00 01 05 41 04 01 00 00");
+write("00 01 05 41 04 02 00 00");
+write("00 01 05 41 04 03 00 00");
+write("00 01 05 41 05 00 00 00");
+write("00 01 05 41 05 01 00 00");
+write("00 01 05 41 05 02 00 00");
+write("00 01 05 41 05 03 00 00");
+write("00 01 05 41 06 00 00 00");
+write("00 01 05 41 06 01 00 00");
+write("00 01 05 41 06 02 00 00");
+write("00 01 05 41 06 03 00 00");
+write("00 01 05 41 07 00 00 00");
+write("00 01 05 41 07 01 00 00");
+write("00 01 05 41 07 02 00 00");
+write("00 01 05 41 07 03 00 00");
+write("00 01 05 41 08 00 00 00");
+write("00 01 05 41 08 01 00 00");
+write("00 01 05 41 08 02 00 00");
+write("00 01 05 41 08 03 00 00");
+write("00 01 05 41 09 00 00 00");
+write("00 01 05 41 09 01 00 00");
+write("00 01 05 41 09 02 00 00");
+write("00 01 05 41 09 03 00 00");
+write("00 01 05 41 0A 00 00 00");
+write("00 01 05 41 0A 01 00 00");
+write("00 01 05 41 0A 02 00 00");
+write("00 01 05 41 0A 03 00 00");
+write("00 01 05 41 0B 00 00 00");
+write("00 01 05 41 0B 01 00 00");
+write("00 01 05 41 0B 02 00 00");
+write("00 01 05 41 0B 03 00 00");
+sleep(500);
+
+let before = readSaveConfig("${base}/before-all-minus60", 0x00, 0x1C);
+
+# After: repeatable per-input test pattern.
+# InA = 0.0 dB raw 280, InB = -1.0 dB raw 270, InC = -20.0 dB raw 80, InD = -30.0 dB raw 60.
+write("00 01 05 41 04 00 18 01");
+write("00 01 05 41 04 01 0E 01");
+write("00 01 05 41 04 02 50 00");
+write("00 01 05 41 04 03 3C 00");
+write("00 01 05 41 05 00 18 01");
+write("00 01 05 41 05 01 0E 01");
+write("00 01 05 41 05 02 50 00");
+write("00 01 05 41 05 03 3C 00");
+write("00 01 05 41 06 00 18 01");
+write("00 01 05 41 06 01 0E 01");
+write("00 01 05 41 06 02 50 00");
+write("00 01 05 41 06 03 3C 00");
+write("00 01 05 41 07 00 18 01");
+write("00 01 05 41 07 01 0E 01");
+write("00 01 05 41 07 02 50 00");
+write("00 01 05 41 07 03 3C 00");
+write("00 01 05 41 08 00 18 01");
+write("00 01 05 41 08 01 0E 01");
+write("00 01 05 41 08 02 50 00");
+write("00 01 05 41 08 03 3C 00");
+write("00 01 05 41 09 00 18 01");
+write("00 01 05 41 09 01 0E 01");
+write("00 01 05 41 09 02 50 00");
+write("00 01 05 41 09 03 3C 00");
+write("00 01 05 41 0A 00 18 01");
+write("00 01 05 41 0A 01 0E 01");
+write("00 01 05 41 0A 02 50 00");
+write("00 01 05 41 0A 03 3C 00");
+write("00 01 05 41 0B 00 18 01");
+write("00 01 05 41 0B 01 0E 01");
+write("00 01 05 41 0B 02 50 00");
+write("00 01 05 41 0B 03 3C 00");
+sleep(500);
+
+let after = readSaveConfig("${base}/after-pattern", 0x00, 0x1C);
+
+saveDiffReport("${base}/assembled-diff-report.txt", assembledData(before), assembledData(after));
+saveText("${base}/pattern-summary.txt",
+    "Matrix gain dump diff\nbefore: all crosspoints -60.0dB raw=0\nafter: InA=0.0dB raw=280, InB=-1.0dB raw=270, InC=-20.0dB raw=80, InD=-30.0dB raw=60\ncommand: 00 01 05 41 <output_channel> <input_index> <gain_lo> <gain_hi>\n"
+);
+
+# Restore all matrix gains to +0.0 dB as shown in the user's screenshot.
+write("00 01 05 41 04 00 18 01");
+write("00 01 05 41 04 01 18 01");
+write("00 01 05 41 04 02 18 01");
+write("00 01 05 41 04 03 18 01");
+write("00 01 05 41 05 00 18 01");
+write("00 01 05 41 05 01 18 01");
+write("00 01 05 41 05 02 18 01");
+write("00 01 05 41 05 03 18 01");
+write("00 01 05 41 06 00 18 01");
+write("00 01 05 41 06 01 18 01");
+write("00 01 05 41 06 02 18 01");
+write("00 01 05 41 06 03 18 01");
+write("00 01 05 41 07 00 18 01");
+write("00 01 05 41 07 01 18 01");
+write("00 01 05 41 07 02 18 01");
+write("00 01 05 41 07 03 18 01");
+write("00 01 05 41 08 00 18 01");
+write("00 01 05 41 08 01 18 01");
+write("00 01 05 41 08 02 18 01");
+write("00 01 05 41 08 03 18 01");
+write("00 01 05 41 09 00 18 01");
+write("00 01 05 41 09 01 18 01");
+write("00 01 05 41 09 02 18 01");
+write("00 01 05 41 09 03 18 01");
+write("00 01 05 41 0A 00 18 01");
+write("00 01 05 41 0A 01 18 01");
+write("00 01 05 41 0A 02 18 01");
+write("00 01 05 41 0A 03 18 01");
+write("00 01 05 41 0B 00 18 01");
+write("00 01 05 41 0B 01 18 01");
+write("00 01 05 41 0B 02 18 01");
+write("00 01 05 41 0B 03 18 01");
+
+print("all-matrix-gains-dumpdiff-done");

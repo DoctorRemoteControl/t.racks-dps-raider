@@ -1,0 +1,13 @@
+tag=ind-gate-release-series-v2
+control=release
+command=0x3E
+channel=0x03
+expectedOffset=7
+frames=64
+writes=32
+responses=32
+gateAll=15
+seriesCount=15
+changingOffsets=[7, 8]
+allGateChangingOffsets=[7, 8]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3E, len=13, hex=00 01 0A 3E 03 E6 03 B7 0B E6 03 B4 00}

@@ -1,0 +1,12 @@
+tag=out1-iir-highpass-slope-series-long
+control=highpass_slope
+command=0x32
+channel=0x04
+expectedOffset=8
+frames=196
+writes=98
+responses=98
+allCommandCount=20
+seriesCount=20
+changingOffsets=[7]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x32, len=9, hex=00 01 06 32 04 00 00 14 0A}

@@ -1,0 +1,14 @@
+tag=out8-peq9-bypass-series
+control=bypass
+command=0x33
+channel=0x0B
+band=0x08
+expectedOffset=12
+frames=44
+writes=22
+responses=22
+peqAll=1
+seriesCount=1
+changingOffsets=[]
+allPeqChangingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 0B 08 00 00 00 00 23 08 01}

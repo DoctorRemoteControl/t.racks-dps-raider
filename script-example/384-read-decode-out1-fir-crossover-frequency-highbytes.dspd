@@ -1,0 +1,39 @@
+# Confirm Out1 FIR crossover frequency high-byte readback storage.
+
+let base = "out/read-decode/out1-fir-crossover-frequency-highbytes";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+let modeFir = "00 01 03 4C 04 01";
+let restore = "00 01 0A 4B 04 03 0A 91 00 92 00 08 00";
+let highBytePattern = "00 01 0A 4B 04 03 0A 2B 01 2C 01 08 00";
+
+saveText("${base}/pattern-summary.txt",
+    "Out1 FIR frequency high-byte read decode\n"
+    + "modeFir=${modeFir}\n"
+    + "restore=${restore}\n"
+    + "highBytePattern=${highBytePattern}\n"
+);
+
+write(modeFir);
+write(restore);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/baseline/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(highBytePattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/high-byte-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(modeFir);
+write(restore);
+
+print("out1-fir-crossover-frequency-highbytes-read-decode-done");

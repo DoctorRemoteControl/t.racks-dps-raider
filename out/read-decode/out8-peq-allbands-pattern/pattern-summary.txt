@@ -1,0 +1,8 @@
+Out8 PEQ all-band read decode
+ + Baseline: gain=0x0078, Q=0x23, Type=0x00, Bypass=0x00, output screenshot frequency spread
+ + Pattern: PEQ1..PEQ9 use unique gain/frequency/Q/type-ish values, Bypass=0x00
+ + Bypass-even pattern: PEQ2/4/6/8 bypass on; Bypass-PEQ9 pattern: only PEQ9 bypass on
+ + PEQ1 base=00 01 0A 33 0B 00 78 00 1F 00 23 00 00
+PEQ1 pattern=00 01 0A 33 0B 00 5A 00 0A 00 0A 01 00
+ + PEQ9 base=00 01 0A 33 0B 08 78 00 1D 01 23 00 00
+PEQ9 pattern=00 01 0A 33 0B 08 D2 00 22 01 5A 01 00

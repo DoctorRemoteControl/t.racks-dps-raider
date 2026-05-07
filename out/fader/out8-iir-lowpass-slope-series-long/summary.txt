@@ -1,0 +1,12 @@
+tag=out8-iir-lowpass-slope-series-long
+control=lowpass_slope
+command=0x31
+channel=0x0B
+expectedOffset=7
+frames=206
+writes=103
+responses=103
+allCommandCount=19
+seriesCount=19
+changingOffsets=[7]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x31, len=9, hex=00 01 06 31 0B 00 00 01 0A}

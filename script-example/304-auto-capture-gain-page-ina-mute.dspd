@@ -1,0 +1,44 @@
+let tag = "gain-page-ina-mute-button";
+let base = "out/fader/${tag}";
+let control = "mute";
+let command = 0x35;
+let channel = 0x00;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "On the Gain page, click only the InA Mute button once.",
+    60000,
+    2500,
+    12000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 40, 0x40);
+let muteAll = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+
+let frames = cap.totalFrames;
+let writes = cap.writeCount;
+let responses = cap.responseCount;
+let muteAllCount = len(muteAll);
+let seriesCount = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+let allOffsets = changingOffsetsAcrossWrites(muteAll);
+
+saveText("${base}/summary.txt",
+    "tag=${tag}\ncontrol=${control}\ncommand=0x35\nchannel=0x00\nexpectedState=0x01\nframes=${frames}\nwrites=${writes}\nresponses=${responses}\nmuteAll=${muteAllCount}\nseriesCount=${seriesCount}\nchangingOffsets=${offsets}\nallMuteChangingOffsets=${allOffsets}\nlastInteresting=${last}\n"
+);
+
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+saveText("${base}/mute-all-payload-series.txt", payloadSeries(muteAll));
+saveText("${base}/mute-all-changing-offsets.txt", allOffsets);
+saveText("${base}/mute-ina-payload-series.txt", payloadSeries(series));
+saveText("${base}/mute-ina-changing-offsets.txt", offsets);
+saveText("${base}/mute-ina-u16-at-4.txt", u16Series(series, 4));
+
+print("done");
+print("saved=${base}");
+print("seriesCount=${seriesCount}");
+print(offsets);

@@ -1,0 +1,38 @@
+let tag = "out8-iir-lowpass-slope-series-long";
+let base = "out/fader/${tag}";
+let command = 0x31;
+let channel = 0x0B;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "Out8 IIR: change only the LowPass slope selector through many different values now.",
+    90000,
+    10000,
+    30000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 120, 0x40);
+let all = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+let offsets = changingOffsetsAcrossWrites(series);
+let allCount = len(all);
+let seriesCount = len(series);
+
+saveText("${base}/summary.txt",
+    "tag=${tag}\ncontrol=lowpass_slope\ncommand=0x31\nchannel=0x0B\nexpectedOffset=7\nframes=${cap.totalFrames}\nwrites=${cap.writeCount}\nresponses=${cap.responseCount}\nallCommandCount=${allCount}\nseriesCount=${seriesCount}\nchangingOffsets=${offsets}\nlastInteresting=${last}\n"
+);
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+saveText("${base}/payload-series.txt", payloadSeries(series));
+saveText("${base}/changing-offsets.txt", offsets);
+saveText("${base}/u16-at-5.txt", u16Series(series, 5));
+saveText("${base}/u16-at-6.txt", u16Series(series, 6));
+saveText("${base}/u16-at-7.txt", u16Series(series, 7));
+saveText("${base}/u8-slope-at-7.txt", byteSeries(series, 7));
+
+print("done");
+print("saved=${base}");
+print("seriesCount=${seriesCount}");
+print(offsets);

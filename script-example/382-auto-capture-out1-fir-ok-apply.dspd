@@ -1,0 +1,32 @@
+// Fresh GUI capture: Out1 FIR OK/apply button.
+// User action: click only the OK button.
+
+let tag = "out1-fir-ok-apply-fresh";
+let base = "out/fir/${tag}";
+let command = 0x4B;
+let channel = 0x04;
+
+guiConnect();
+
+let cap = guiActionCapture("Out1 FIR Crossover: nur den OK-Button klicken.", 60000, 3000, 10000);
+
+let all = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+let count = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/all-4b-writes.txt", all);
+saveText("${base}/out1-4b-writes.txt", series);
+saveText("${base}/out1-4b-payloads.txt", payloadSeries(series));
+saveText("${base}/out1-4b-changing-offsets.txt", offsets);
+saveText("${base}/out1-u16-at-5.txt", u16Series(series, 5));
+saveText("${base}/out1-u16-at-6.txt", u16Series(series, 6));
+saveText("${base}/out1-highpass-u16-series.txt", u16Series(series, 7));
+saveText("${base}/out1-lowpass-u16-series.txt", u16Series(series, 9));
+saveText("${base}/out1-taps-u16-series.txt", u16Series(series, 11));
+
+print("Out1 FIR OK/apply capture done");
+print("Out1 0x4B writes: ${count}");
+print("Saved to: ${base}");
+print(offsets);

@@ -38,6 +38,9 @@ public final class WriteDecodeService {
         }
 
         return switch (command) {
+            case 0x20 -> decodeRecallPreset(payload, frame.commandHex());
+            case 0x21 -> decodeStorePresetSlot(payload, frame.commandHex());
+            case 0x26 -> decodeStorePresetName(payload, frame.commandHex());
             case 0x30 -> decodeCompressor(payload, frame.commandHex());
             case 0x31, 0x32 -> decodeCrossoverRawView(payload, frame.commandHex(), command);
             case 0x33 -> decodePeqRawView(payload, frame.commandHex());
@@ -59,6 +62,41 @@ public final class WriteDecodeService {
             case 0x5B -> decodeExternalFirName(payload, frame.commandHex());
             default -> unknown(frame.commandHex(), "payload=" + frame.payloadHex());
         };
+    }
+
+    private WriteDecodeResult decodeRecallPreset(byte[] payload, String commandHex) {
+        requireLen(payload, 5, "recall preset");
+        int slot = u8(payload, 4);
+
+        return match(commandHex, "$.parameters.preset_management.write.load",
+                "Recall preset",
+                List.of(
+                        "slot     = " + lib.presetSlot(slot),
+                        "slot_raw = 0x%02X".formatted(slot)
+                ));
+    }
+
+    private WriteDecodeResult decodeStorePresetSlot(byte[] payload, String commandHex) {
+        requireLen(payload, 5, "store preset slot");
+        int slot = u8(payload, 4);
+
+        return match(commandHex, "$.parameters.preset_management.write.store_slot",
+                "Store preset slot",
+                List.of(
+                        "slot     = " + lib.presetSlot(slot),
+                        "slot_raw = 0x%02X".formatted(slot)
+                ));
+    }
+
+    private WriteDecodeResult decodeStorePresetName(byte[] payload, String commandHex) {
+        requireLen(payload, 18, "store preset name");
+        String name = asciiZeroTrim(payload, 4, 14).stripTrailing();
+
+        return match(commandHex, "$.parameters.preset_management.write.store_name",
+                "Store preset name",
+                List.of(
+                        "name = " + name
+                ));
     }
 
     private WriteDecodeResult decodeFirGenerator(byte[] payload, String commandHex) {

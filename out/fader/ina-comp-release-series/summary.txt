@@ -1,0 +1,12 @@
+tag=ina-comp-release-series
+control=release
+command=0x30
+channel=0x00
+frames=86
+writes=43
+responses=43
+compAll=5
+seriesCount=5
+changingOffsets=[9, 10]
+allCompChangingOffsets=[9, 10]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x30, len=19, hex=00 01 10 30 00 0F 00 E6 03 B7 0B 00 00 00 00 2C 01 23 00}

@@ -1,0 +1,30 @@
+[
+  {
+    "Block": "0x0B",
+    "OffsetDec": 53,
+    "OffsetHex": "0x35",
+    "Before": "0x91",
+    "After": "0x2B"
+  },
+  {
+    "Block": "0x0B",
+    "OffsetDec": 54,
+    "OffsetHex": "0x36",
+    "Before": "0x00",
+    "After": "0x01"
+  },
+  {
+    "Block": "0x0C",
+    "OffsetDec": 5,
+    "OffsetHex": "0x05",
+    "Before": "0x92",
+    "After": "0x2C"
+  },
+  {
+    "Block": "0x0C",
+    "OffsetDec": 6,
+    "OffsetHex": "0x06",
+    "Before": "0x00",
+    "After": "0x01"
+  }
+]

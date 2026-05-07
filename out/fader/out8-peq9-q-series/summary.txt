@@ -1,0 +1,14 @@
+tag=out8-peq9-q-series
+control=q
+command=0x33
+channel=0x0B
+band=0x08
+expectedOffset=10
+frames=90
+writes=45
+responses=45
+peqAll=20
+seriesCount=20
+changingOffsets=[10]
+allPeqChangingOffsets=[10]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 0B 08 78 00 00 00 00 00 00}

@@ -1,0 +1,13 @@
+tag=ind-gate-hold-series-v2
+control=hold
+command=0x3E
+channel=0x03
+expectedOffset=9
+frames=35
+writes=17
+responses=18
+gateAll=6
+seriesCount=6
+changingOffsets=[9, 10]
+allGateChangingOffsets=[9, 10]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3E, len=13, hex=00 01 0A 3E 03 E6 03 09 00 E6 03 B4 00}

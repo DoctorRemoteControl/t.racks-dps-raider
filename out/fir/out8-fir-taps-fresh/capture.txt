@@ -1,0 +1,1 @@
+capture{frames=74, writes=37, responses=37, firstWrite=0x40}

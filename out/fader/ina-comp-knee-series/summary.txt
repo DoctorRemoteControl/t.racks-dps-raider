@@ -1,0 +1,12 @@
+tag=ina-comp-knee-series
+control=knee
+command=0x30
+channel=0x00
+frames=58
+writes=29
+responses=29
+compAll=12
+seriesCount=12
+changingOffsets=[11]
+allCompChangingOffsets=[11]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x30, len=19, hex=00 01 10 30 00 0F 00 E6 03 B7 0B 0C 00 00 00 2C 01 23 00}

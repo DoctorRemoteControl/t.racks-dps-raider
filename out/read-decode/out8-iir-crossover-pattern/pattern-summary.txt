@@ -1,0 +1,6 @@
+Out8 IIR crossover read decode
+ + HP base=00 01 06 32 0B 00 00 00 0A
+LP base=00 01 06 31 0B 2C 01 00 0A
+ + HP pattern=00 01 06 32 0B 5A 00 14 0A
+LP pattern=00 01 06 31 0B A5 00 05 0A
+ + Payload layout observed by GUI: 00 01 06 <31/32> <channel> <freq_lo> <freq_hi> <state_or_slope> 0A

@@ -1,0 +1,52 @@
+// Fresh GUI capture: Out8 FIR Type = External FIR file load.
+// User action: click the folder button and load the deterministic 512-tap impulse file.
+
+let tag = "out8-external-fir-impulse-load-fresh";
+let base = "out/fir/${tag}";
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "Out8 FIR External FIR: Ordner-Button klicken und C:\\Users\\XLA\\DSP408\\tracks-dsp-raider\\fir-test-files\\fir_512_impulse_first.txt laden. Danach nichts mehr anfassen.",
+    180000,
+    10000,
+    45000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 1000, 0x40);
+let writes4b = writesByCommand(cap, 0x4B);
+let writes4e = writesByCommand(cap, 0x4E);
+let writes4f = writesByCommand(cap, 0x4F);
+let writes5b = writesByCommand(cap, 0x5B);
+let count4b = len(writes4b);
+let count4e = len(writes4e);
+let count4f = len(writes4f);
+let count5b = len(writes5b);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+saveText("${base}/writes-4b.txt", writes4b);
+saveText("${base}/writes-4e.txt", writes4e);
+saveText("${base}/writes-4f.txt", writes4f);
+saveText("${base}/writes-5b.txt", writes5b);
+saveText("${base}/payloads-4b.txt", payloadSeries(writes4b));
+saveText("${base}/payloads-4e.txt", payloadSeries(writes4e));
+saveText("${base}/payloads-4f.txt", payloadSeries(writes4f));
+saveText("${base}/payloads-5b.txt", payloadSeries(writes5b));
+saveText("${base}/capture-summary.txt",
+    "Out8 External FIR impulse load\n"
+    + "0x4B writes=${count4b}\n"
+    + "0x4E writes=${count4e}\n"
+    + "0x4F writes=${count4f}\n"
+    + "0x5B writes=${count5b}\n"
+    + "last=${last}\n"
+);
+
+print("out8-external-fir-impulse-load-capture-done");
+print("0x4B writes=${count4b}");
+print("0x4F writes=${count4f}");
+print("0x4E writes=${count4e}");
+print("0x5B writes=${count5b}");
+print("saved=${base}");

@@ -1,0 +1,26 @@
+// FIR408 GUI capture: Test Tone source byte via real GUI action.
+// This script intentionally does not open a DSP control session, because that can
+// disconnect the vendor GUI. Run a separate readback script after GUI capture.
+// Assumption before run: Analog Input is selected.
+
+let tag = "testtone-source-gui-readback-fir408";
+let base = "out/gui-read-decode/${tag}";
+
+connect();
+guiConnect();
+clearFrames();
+let cap = guiActionCapture("Test Tone: nur Sine Wave anklicken, Frequenz nicht aendern.", 90000, 1500, 8000);
+
+let cmd39Writes = writesByCommand(cap, 0x39);
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 20, 0x40);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/cmd39-writes.txt", cmd39Writes);
+saveText("${base}/cmd39-payloads.txt", payloadSeries(cmd39Writes));
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+
+print("testtone-source-gui-capture-fir408 done");
+print("Saved to: ${base}");
+print(last);

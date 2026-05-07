@@ -1,0 +1,49 @@
+// Fresh GUI capture: store/save user preset U01 with name "user1".
+// GUI-only capture: do not reset or handshake the control session.
+
+let tag = "preset-store-user-u01-user1-fresh";
+let base = "out/preset/${tag}";
+
+connect();
+guiConnect();
+clearFrames();
+
+let cap = guiActionCapture("Preset Store: auf U01 speichern, Namen user1 eingeben und bestaetigen.", 120000, 20000, 120000);
+
+let allWrites = writes(cap);
+let cmd20Writes = writesByCommand(cap, 0x20);
+let cmd21Writes = writesByCommand(cap, 0x21);
+let cmd22Writes = writesByCommand(cap, 0x22);
+let cmd28Writes = writesByCommand(cap, 0x28);
+let cmd29Writes = writesByCommand(cap, 0x29);
+let cmd2aWrites = writesByCommand(cap, 0x2A);
+let cmd2bWrites = writesByCommand(cap, 0x2B);
+let cmd2cWrites = writesByCommand(cap, 0x2C);
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 80, 0x40);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/all-writes.txt", allWrites);
+saveText("${base}/all-payloads.txt", payloadSeries(allWrites));
+saveText("${base}/cmd20-writes.txt", cmd20Writes);
+saveText("${base}/cmd20-payloads.txt", payloadSeries(cmd20Writes));
+saveText("${base}/cmd21-writes.txt", cmd21Writes);
+saveText("${base}/cmd21-payloads.txt", payloadSeries(cmd21Writes));
+saveText("${base}/cmd22-writes.txt", cmd22Writes);
+saveText("${base}/cmd22-payloads.txt", payloadSeries(cmd22Writes));
+saveText("${base}/cmd28-writes.txt", cmd28Writes);
+saveText("${base}/cmd28-payloads.txt", payloadSeries(cmd28Writes));
+saveText("${base}/cmd29-writes.txt", cmd29Writes);
+saveText("${base}/cmd29-payloads.txt", payloadSeries(cmd29Writes));
+saveText("${base}/cmd2a-writes.txt", cmd2aWrites);
+saveText("${base}/cmd2a-payloads.txt", payloadSeries(cmd2aWrites));
+saveText("${base}/cmd2b-writes.txt", cmd2bWrites);
+saveText("${base}/cmd2b-payloads.txt", payloadSeries(cmd2bWrites));
+saveText("${base}/cmd2c-writes.txt", cmd2cWrites);
+saveText("${base}/cmd2c-payloads.txt", payloadSeries(cmd2cWrites));
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+
+print("preset-store-user-u01-user1-fresh done");
+print("Saved to: ${base}");
+print(last);

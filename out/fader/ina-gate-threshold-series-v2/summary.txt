@@ -1,0 +1,13 @@
+tag=ina-gate-threshold-series-v2
+control=threshold
+command=0x3E
+channel=0x00
+expectedOffset=11
+frames=88
+writes=44
+responses=44
+gateAll=12
+seriesCount=12
+changingOffsets=[11]
+allGateChangingOffsets=[11]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3E, len=13, hex=00 01 0A 3E 00 E6 03 B7 0B E6 03 00 00}

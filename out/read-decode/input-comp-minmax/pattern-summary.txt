@@ -1,0 +1,11 @@
+Input Comp min/max read decode
+ + min: ratio=0 attack=0 release=9 knee=0 threshold=0 frequency=0 type=0 context=0x23
+ + max: ratio=15 attack=998 release=2999 knee=12 threshold=220 frequency=300 type=9 context=0x23
+ + InA min=00 01 10 30 00 00 00 00 00 09 00 00 00 00 00 00 00 23 00
+InA max=00 01 10 30 00 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09
+ + InB min=00 01 10 30 01 00 00 00 00 09 00 00 00 00 00 00 00 23 00
+InB max=00 01 10 30 01 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09
+ + InC min=00 01 10 30 02 00 00 00 00 09 00 00 00 00 00 00 00 23 00
+InC max=00 01 10 30 02 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09
+ + InD min=00 01 10 30 03 00 00 00 00 09 00 00 00 00 00 00 00 23 00
+InD max=00 01 10 30 03 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09

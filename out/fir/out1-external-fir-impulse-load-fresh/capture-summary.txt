@@ -1,0 +1,6 @@
+Out1 External FIR impulse load
+ + 0x4B writes=0
+ + 0x4E writes=43
+ + 0x4F writes=0
+ + 0x5B writes=1
+ + last=sniff{dir=PC_TO_DSP, cmd=0x4E, len=40, hex=00 01 25 4E 04 2A 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00}

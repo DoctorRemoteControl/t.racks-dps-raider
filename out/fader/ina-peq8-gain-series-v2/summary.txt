@@ -1,0 +1,14 @@
+tag=ina-peq8-gain-series-v2
+control=gain
+command=0x33
+channel=0x00
+band=0x07
+expectedOffset=6
+frames=31
+writes=16
+responses=15
+peqAll=4
+seriesCount=4
+changingOffsets=[6]
+allPeqChangingOffsets=[6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 00 07 F0 00 00 00 64 00 00}

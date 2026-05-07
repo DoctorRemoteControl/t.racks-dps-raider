@@ -1,0 +1,27 @@
+Delay min/max read decode for InA..InD and Out1..Out8
+min: raw=0 = 0.000 ms
+max: raw=65280 = 680.000 ms
+InA min=00 01 04 38 00 00 00
+InA max=00 01 04 38 00 00 FF
+InB min=00 01 04 38 01 00 00
+InB max=00 01 04 38 01 00 FF
+InC min=00 01 04 38 02 00 00
+InC max=00 01 04 38 02 00 FF
+InD min=00 01 04 38 03 00 00
+InD max=00 01 04 38 03 00 FF
+Out1 min=00 01 04 38 04 00 00
+Out1 max=00 01 04 38 04 00 FF
+Out2 min=00 01 04 38 05 00 00
+Out2 max=00 01 04 38 05 00 FF
+Out3 min=00 01 04 38 06 00 00
+Out3 max=00 01 04 38 06 00 FF
+Out4 min=00 01 04 38 07 00 00
+Out4 max=00 01 04 38 07 00 FF
+Out5 min=00 01 04 38 08 00 00
+Out5 max=00 01 04 38 08 00 FF
+Out6 min=00 01 04 38 09 00 00
+Out6 max=00 01 04 38 09 00 FF
+Out7 min=00 01 04 38 0A 00 00
+Out7 max=00 01 04 38 0A 00 FF
+Out8 min=00 01 04 38 0B 00 00
+Out8 max=00 01 04 38 0B 00 FF

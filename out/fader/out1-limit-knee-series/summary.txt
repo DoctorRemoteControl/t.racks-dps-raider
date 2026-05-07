@@ -1,0 +1,12 @@
+tag=out1-limit-knee-series
+control=knee
+command=0x3F
+channel=0x04
+frames=64
+writes=32
+responses=32
+limitAll=12
+seriesCount=12
+changingOffsets=[11]
+allLimitChangingOffsets=[11]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3F, len=15, hex=00 01 0C 3F 04 00 00 E6 03 B7 0B 0C 00 00 00}

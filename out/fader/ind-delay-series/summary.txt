@@ -1,0 +1,12 @@
+tag=ind-delay-series
+control=delay
+command=0x38
+channel=0x03
+frames=102
+writes=51
+responses=51
+delayAll=20
+seriesCount=20
+changingOffsets=[5, 6]
+allDelayChangingOffsets=[5, 6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x38, len=7, hex=00 01 04 38 03 00 00}

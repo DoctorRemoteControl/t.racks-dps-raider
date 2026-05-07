@@ -1,0 +1,8 @@
+before_len=55, after_len=55
+
+[BYTE DIFFS]
+0x22: 00 -> FF
+
+[U16LE CANDIDATES]
+u16le@0x21: 0 -> 65280 (0x0000 -> 0xFF00)
+u16le@0x22: 32768 -> 33023 (0x8000 -> 0x80FF)

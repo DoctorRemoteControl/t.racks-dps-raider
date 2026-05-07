@@ -1,0 +1,47 @@
+# Matrix Gain Readback Map
+
+Capture date: 2026-05-07
+
+Script: `script-example/291-read-decode-all-matrix-gains-dumpdiff.dspd`
+
+Direct endpoint confirmations:
+
+- `script-example/51-read-decode-matrix-gain-out1-inb-allblocks.dspd`
+- `script-example/293-read-decode-matrix-gain-out8-ind-allblocks.dspd`
+
+Write command:
+
+```text
+00 01 05 41 OO II GG GG
+```
+
+Where:
+
+- `OO` = output channel (`Out1=0x04` ... `Out8=0x0B`)
+- `II` = input index (`InA=0x00`, `InB=0x01`, `InC=0x02`, `InD=0x03`)
+- `GG GG` = gain raw value, u16le
+
+The dump diff wrote all crosspoints from raw `0` (`-60.0 dB`) to this pattern:
+
+```text
+InA = raw 280 = 0.0 dB
+InB = raw 270 = -1.0 dB
+InC = raw 80  = -20.0 dB
+InD = raw 60  = -30.0 dB
+```
+
+Locations:
+
+| Output | InA | InB | InC | InD |
+| --- | ---: | ---: | ---: | ---: |
+| Out1 | `0x0B:0x21` | `0x0B:0x23` | `0x0B:0x25` | `0x0B:0x27` |
+| Out2 | `0x0D:0x29` | `0x0D:0x2B` | `0x0D:0x2D` | `0x0D:0x2F` |
+| Out3 | `0x0F:0x31` | `0x0F:0x33` | `0x0F:0x35` | `0x10:0x05` |
+| Out4 | `0x12:0x07` | `0x12:0x09` | `0x12:0x0B` | `0x12:0x0D` |
+| Out5 | `0x14:0x0F` | `0x14:0x11` | `0x14:0x13` | `0x14:0x15` |
+| Out6 | `0x16:0x17` | `0x16:0x19` | `0x16:0x1B` | `0x16:0x1D` |
+| Out7 | `0x18:0x1F` | `0x18:0x21` | `0x18:0x23` | `0x18:0x25` |
+| Out8 | `0x1A:0x27` | `0x1A:0x29` | `0x1A:0x2B` | `0x1A:0x2D` |
+
+Out1/InB direct scan confirmed block `0x0B` offset `0x23`.
+Out8/InD direct scan confirmed block `0x1A` offset `0x2D`.

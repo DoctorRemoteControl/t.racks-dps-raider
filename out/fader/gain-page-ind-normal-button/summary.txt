@@ -1,0 +1,13 @@
+tag=gain-page-ind-normal-button
+control=normal
+command=0x36
+channel=0x03
+expectedState=0x00
+frames=56
+writes=28
+responses=28
+normalAll=1
+seriesCount=1
+changingOffsets=[]
+allNormalChangingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x36, len=6, hex=00 01 03 36 03 01}

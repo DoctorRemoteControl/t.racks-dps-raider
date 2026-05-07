@@ -1,0 +1,12 @@
+tag=out8-iir-lowpass-bypass
+control=lowpass_bypass
+command=0x31
+channel=0x0B
+expectedOffset=7
+frames=29
+writes=14
+responses=15
+allCommandCount=1
+seriesCount=1
+changingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x31, len=9, hex=00 01 06 31 0B 00 00 00 0A}

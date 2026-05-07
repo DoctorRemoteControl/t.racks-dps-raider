@@ -1,0 +1,8 @@
+InD PEQ all-band read decode
+ + Baseline: gain=0x0078, Q=0x23, Type=0x00, Bypass=0x00, default-ish frequency spread
+ + Pattern: PEQ1..PEQ8 use unique gain/frequency/Q/type bytes, Bypass=0x00
+ + Bypass pattern: same unique values, PEQ2/4/6/8 bypass on; expected read bitmask 0xAA if bit order is linear
+ + PEQ1 base=00 01 0A 33 03 00 78 00 18 00 23 00 00
+PEQ1 pattern=00 01 0A 33 03 00 5A 00 0A 00 0A 01 00
+ + PEQ8 base=00 01 0A 33 03 07 78 00 2C 01 23 00 00
+PEQ8 pattern=00 01 0A 33 03 07 D2 00 FF 00 50 08 00

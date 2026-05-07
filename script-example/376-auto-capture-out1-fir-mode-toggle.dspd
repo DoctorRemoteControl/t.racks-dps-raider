@@ -1,0 +1,28 @@
+// Fresh GUI capture: Out1 crossover FIR mode selector.
+// User action: switch Out1 Mode from FIR to IIR and back to FIR.
+
+let tag = "out1-fir-mode-toggle-fresh";
+let base = "out/fir/${tag}";
+let command = 0x4C;
+let channel = 0x04;
+
+guiConnect();
+
+let cap = guiActionCapture("Out1 Crossover: Mode dropdown einmal von FIR auf IIR und direkt zurueck auf FIR stellen.", 90000, 3000, 15000);
+
+let all = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+let count = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/all-4c-writes.txt", all);
+saveText("${base}/out1-4c-writes.txt", series);
+saveText("${base}/out1-4c-payloads.txt", payloadSeries(series));
+saveText("${base}/out1-4c-changing-offsets.txt", offsets);
+saveText("${base}/out1-4c-u16-at-4.txt", u16Series(series, 4));
+
+print("Out1 FIR mode toggle capture done");
+print("Out1 0x4C writes: ${count}");
+print("Saved to: ${base}");
+print(offsets);

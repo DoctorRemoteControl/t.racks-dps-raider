@@ -1,0 +1,14 @@
+tag=out8-peq1-gain-series
+control=gain
+command=0x33
+channel=0x0B
+band=0x00
+expectedOffset=6
+frames=100
+writes=50
+responses=50
+peqAll=24
+seriesCount=24
+changingOffsets=[6]
+allPeqChangingOffsets=[6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 0B 00 F0 00 2C 01 64 00 00}

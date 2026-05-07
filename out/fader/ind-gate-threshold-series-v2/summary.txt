@@ -1,0 +1,13 @@
+tag=ind-gate-threshold-series-v2
+control=threshold
+command=0x3E
+channel=0x03
+expectedOffset=11
+frames=54
+writes=27
+responses=27
+gateAll=8
+seriesCount=8
+changingOffsets=[11]
+allGateChangingOffsets=[11]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3E, len=13, hex=00 01 0A 3E 03 00 00 09 00 09 00 B4 00}

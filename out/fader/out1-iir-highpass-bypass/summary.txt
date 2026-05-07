@@ -1,0 +1,12 @@
+tag=out1-iir-highpass-bypass
+control=highpass_bypass
+command=0x32
+channel=0x04
+expectedOffset=7
+frames=37
+writes=19
+responses=18
+allCommandCount=1
+seriesCount=1
+changingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x32, len=9, hex=00 01 06 32 04 00 00 01 0A}

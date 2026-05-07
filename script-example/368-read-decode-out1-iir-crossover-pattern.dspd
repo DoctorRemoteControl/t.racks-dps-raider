@@ -1,0 +1,63 @@
+# Decode Out1 IIR crossover readback storage using the fresh FIR408
+# 9-byte GUI-observed write payloads.
+
+let base = "out/read-decode/out1-iir-crossover-pattern";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Baseline matches the screenshot/default shape: HP at 19.7 Hz, LP at 20.16 kHz,
+# both bypass/state byte 0x00, trailing context byte preserved as observed 0x0A.
+let hpBase = "00 01 06 32 04 00 00 00 0A";
+let lpBase = "00 01 06 31 04 2C 01 00 0A";
+
+# Distinct patterns.
+let hpPattern = "00 01 06 32 04 5A 00 14 0A";
+let lpPattern = "00 01 06 31 04 A5 00 05 0A";
+
+saveText("${base}/pattern-summary.txt",
+    "Out1 IIR crossover read decode\n"
+    + "HP base=${hpBase}\nLP base=${lpBase}\n"
+    + "HP pattern=${hpPattern}\nLP pattern=${lpPattern}\n"
+    + "Payload layout observed by GUI: 00 01 06 <31/32> <channel> <freq_lo> <freq_hi> <state_or_slope> 0A\n"
+);
+
+write(hpBase);
+write(lpBase);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/baseline/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(hpPattern);
+write(lpBase);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/hp-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(hpBase);
+write(lpPattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/lp-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(hpPattern);
+write(lpPattern);
+sleep(300);
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/both-pattern/block-${i}.hex.txt", block.payloadHex);
+}
+
+# Restore screenshot/default shape.
+write(hpBase);
+write(lpBase);
+
+print("out1-iir-crossover-pattern-read-decode-done");

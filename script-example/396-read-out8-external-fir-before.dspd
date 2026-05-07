@@ -1,0 +1,15 @@
+# Read current config before Out8 External FIR import.
+
+let tag = "out8-external-fir-import";
+let base = "out/read-decode/${tag}";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+let before = readSaveConfig("${base}/before", 0x00, 0x1F);
+saveText("${base}/before-assembled.hex.txt", hex(assembledData(before)));
+
+print("out8-external-fir-before-read-done");
+print("saved=${base}/before");

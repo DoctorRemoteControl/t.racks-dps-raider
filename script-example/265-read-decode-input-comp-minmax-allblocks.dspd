@@ -1,0 +1,132 @@
+# Decode FIR408 input compressor readback locations by controlled min -> max writes.
+# The write frame layout comes from stable InA/InD GUI captures.
+
+let base = "out/read-decode/input-comp-minmax";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Min GUI state:
+# ratio=0 (1:1.0), attack=0 (1 ms), release=9 (10 ms), knee=0,
+# threshold=0 (-90 dB), frequency=0 (19.7 Hz), type=0 (Bypass).
+#
+# Max GUI state:
+# ratio=15 (Limit), attack=998 (999 ms), release=2999 (3000 ms), knee=12,
+# threshold=220 (+20 dB), frequency=300 (20.16 kHz), type=9 (10.0).
+#
+# Offset 17 is type_context_u8. GUI captures kept it at 0x23 for InA/InD,
+# so this script preserves 0x23 while decoding visible Comp field storage.
+
+let inaMin = "00 01 10 30 00 00 00 00 00 09 00 00 00 00 00 00 00 23 00";
+let inaMax = "00 01 10 30 00 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09";
+
+let inbMin = "00 01 10 30 01 00 00 00 00 09 00 00 00 00 00 00 00 23 00";
+let inbMax = "00 01 10 30 01 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09";
+
+let incMin = "00 01 10 30 02 00 00 00 00 09 00 00 00 00 00 00 00 23 00";
+let incMax = "00 01 10 30 02 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09";
+
+let indMin = "00 01 10 30 03 00 00 00 00 09 00 00 00 00 00 00 00 23 00";
+let indMax = "00 01 10 30 03 0F 00 E6 03 B7 0B 0C 00 DC 00 2C 01 23 09";
+
+saveText("${base}/pattern-summary.txt",
+    "Input Comp min/max read decode\n"
+    + "min: ratio=0 attack=0 release=9 knee=0 threshold=0 frequency=0 type=0 context=0x23\n"
+    + "max: ratio=15 attack=998 release=2999 knee=12 threshold=220 frequency=300 type=9 context=0x23\n"
+    + "InA min=${inaMin}\nInA max=${inaMax}\n"
+    + "InB min=${inbMin}\nInB max=${inbMax}\n"
+    + "InC min=${incMin}\nInC max=${incMax}\n"
+    + "InD min=${indMin}\nInD max=${indMax}\n"
+);
+
+for (let i in 0..28) {
+    write(inaMin);
+    sleep(150);
+    let before = readBlock(i);
+
+    write(inaMax);
+    sleep(150);
+    let after = readBlock(i);
+
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/ina/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/ina/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/ina/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/ina/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/ina/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/ina/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("ina changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(inbMin);
+    sleep(150);
+    let before = readBlock(i);
+
+    write(inbMax);
+    sleep(150);
+    let after = readBlock(i);
+
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/inb/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/inb/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/inb/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/inb/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/inb/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/inb/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("inb changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(incMin);
+    sleep(150);
+    let before = readBlock(i);
+
+    write(incMax);
+    sleep(150);
+    let after = readBlock(i);
+
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/inc/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/inc/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/inc/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/inc/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/inc/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/inc/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("inc changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(indMin);
+    sleep(150);
+    let before = readBlock(i);
+
+    write(indMax);
+    sleep(150);
+    let after = readBlock(i);
+
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/ind/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/ind/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/ind/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/ind/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/ind/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/ind/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("ind changed-block ${i}");
+        print(offsets);
+    }
+}
+
+print("input-comp-minmax-read-decode-done");

@@ -1,0 +1,14 @@
+tag=ind-peq8-type-series
+control=type
+command=0x33
+channel=0x03
+band=0x07
+expectedOffset=11
+frames=35
+writes=18
+responses=17
+peqAll=2
+seriesCount=2
+changingOffsets=[]
+allPeqChangingOffsets=[]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x33, len=13, hex=00 01 0A 33 03 07 00 00 00 00 23 08 00}

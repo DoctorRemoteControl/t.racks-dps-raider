@@ -1,0 +1,106 @@
+# Decode Out8 PEQ readback storage by writing a known baseline,
+# then a unique pattern across PEQ1..PEQ9, then two bypass masks.
+
+let base = "out/read-decode/out8-peq-allbands-pattern";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+# Baseline: output PEQ screenshot/default values.
+# Gain 0.0 dB (0x0078), Q 3.00 (0x23), Type Peak (0x00), Bypass off (0x00).
+let peq1Base = "00 01 0A 33 0B 00 78 00 1F 00 23 00 00";
+let peq2Base = "00 01 0A 33 0B 01 78 00 3F 00 23 00 00";
+let peq3Base = "00 01 0A 33 0B 02 78 00 5F 00 23 00 00";
+let peq4Base = "00 01 0A 33 0B 03 78 00 7F 00 23 00 00";
+let peq5Base = "00 01 0A 33 0B 04 78 00 9E 00 23 00 00";
+let peq6Base = "00 01 0A 33 0B 05 78 00 BE 00 23 00 00";
+let peq7Base = "00 01 0A 33 0B 06 78 00 DE 00 23 00 00";
+let peq8Base = "00 01 0A 33 0B 07 78 00 FD 00 23 00 00";
+let peq9Base = "00 01 0A 33 0B 08 78 00 1D 01 23 00 00";
+
+# Unique value pattern: all value fields differ from baseline.
+let peq1Pattern = "00 01 0A 33 0B 00 5A 00 0A 00 0A 01 00";
+let peq2Pattern = "00 01 0A 33 0B 01 69 00 2D 00 14 02 00";
+let peq3Pattern = "00 01 0A 33 0B 02 7B 00 50 00 1E 03 00";
+let peq4Pattern = "00 01 0A 33 0B 03 87 00 73 00 28 04 00";
+let peq5Pattern = "00 01 0A 33 0B 04 96 00 96 00 32 05 00";
+let peq6Pattern = "00 01 0A 33 0B 05 A5 00 B9 00 3C 06 00";
+let peq7Pattern = "00 01 0A 33 0B 06 B4 00 DC 00 46 07 00";
+let peq8Pattern = "00 01 0A 33 0B 07 C3 00 FF 00 50 08 00";
+let peq9Pattern = "00 01 0A 33 0B 08 D2 00 22 01 5A 01 00";
+
+# Same values, but PEQ2/4/6/8 bypass on. Expected low bitmask is 0xAA if PEQ1 is bit0.
+let peq1BypassEven = "00 01 0A 33 0B 00 5A 00 0A 00 0A 01 00";
+let peq2BypassEven = "00 01 0A 33 0B 01 69 00 2D 00 14 02 01";
+let peq3BypassEven = "00 01 0A 33 0B 02 7B 00 50 00 1E 03 00";
+let peq4BypassEven = "00 01 0A 33 0B 03 87 00 73 00 28 04 01";
+let peq5BypassEven = "00 01 0A 33 0B 04 96 00 96 00 32 05 00";
+let peq6BypassEven = "00 01 0A 33 0B 05 A5 00 B9 00 3C 06 01";
+let peq7BypassEven = "00 01 0A 33 0B 06 B4 00 DC 00 46 07 00";
+let peq8BypassEven = "00 01 0A 33 0B 07 C3 00 FF 00 50 08 01";
+let peq9BypassEven = "00 01 0A 33 0B 08 D2 00 22 01 5A 01 00";
+
+# Same values, but only PEQ9 bypass on to locate the ninth bypass storage bit.
+let peq1Bypass9 = "00 01 0A 33 0B 00 5A 00 0A 00 0A 01 00";
+let peq2Bypass9 = "00 01 0A 33 0B 01 69 00 2D 00 14 02 00";
+let peq3Bypass9 = "00 01 0A 33 0B 02 7B 00 50 00 1E 03 00";
+let peq4Bypass9 = "00 01 0A 33 0B 03 87 00 73 00 28 04 00";
+let peq5Bypass9 = "00 01 0A 33 0B 04 96 00 96 00 32 05 00";
+let peq6Bypass9 = "00 01 0A 33 0B 05 A5 00 B9 00 3C 06 00";
+let peq7Bypass9 = "00 01 0A 33 0B 06 B4 00 DC 00 46 07 00";
+let peq8Bypass9 = "00 01 0A 33 0B 07 C3 00 FF 00 50 08 00";
+let peq9Bypass9 = "00 01 0A 33 0B 08 D2 00 22 01 5A 01 01";
+
+saveText("${base}/pattern-summary.txt",
+    "Out8 PEQ all-band read decode\n"
+    + "Baseline: gain=0x0078, Q=0x23, Type=0x00, Bypass=0x00, output screenshot frequency spread\n"
+    + "Pattern: PEQ1..PEQ9 use unique gain/frequency/Q/type-ish values, Bypass=0x00\n"
+    + "Bypass-even pattern: PEQ2/4/6/8 bypass on; Bypass-PEQ9 pattern: only PEQ9 bypass on\n"
+    + "PEQ1 base=${peq1Base}\nPEQ1 pattern=${peq1Pattern}\n"
+    + "PEQ9 base=${peq9Base}\nPEQ9 pattern=${peq9Pattern}\n"
+);
+
+write(peq1Base); write(peq2Base); write(peq3Base); write(peq4Base); write(peq5Base);
+write(peq6Base); write(peq7Base); write(peq8Base); write(peq9Base);
+sleep(300);
+
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/baseline/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(peq1Pattern); write(peq2Pattern); write(peq3Pattern); write(peq4Pattern); write(peq5Pattern);
+write(peq6Pattern); write(peq7Pattern); write(peq8Pattern); write(peq9Pattern);
+sleep(300);
+
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/pattern/block-${i}.hex.txt", block.payloadHex);
+    saveText("${base}/bypass-before/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(peq1BypassEven); write(peq2BypassEven); write(peq3BypassEven); write(peq4BypassEven); write(peq5BypassEven);
+write(peq6BypassEven); write(peq7BypassEven); write(peq8BypassEven); write(peq9BypassEven);
+sleep(300);
+
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/bypass-even/block-${i}.hex.txt", block.payloadHex);
+}
+
+write(peq1Bypass9); write(peq2Bypass9); write(peq3Bypass9); write(peq4Bypass9); write(peq5Bypass9);
+write(peq6Bypass9); write(peq7Bypass9); write(peq8Bypass9); write(peq9Bypass9);
+sleep(300);
+
+for (let i in 0..31) {
+    let block = readBlock(i);
+    saveText("${base}/bypass-peq9/block-${i}.hex.txt", block.payloadHex);
+}
+
+# Restore the output PEQ baseline.
+write(peq1Base); write(peq2Base); write(peq3Base); write(peq4Base); write(peq5Base);
+write(peq6Base); write(peq7Base); write(peq8Base); write(peq9Base);
+
+print("out8-peq-allbands-pattern-read-decode-done");

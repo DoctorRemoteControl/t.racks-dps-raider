@@ -1,0 +1,26 @@
+// Fresh GUI capture: Test Tone sine frequency selector series.
+
+let tag = "testtone-sine-frequency-fresh";
+let base = "out/testtone/${tag}";
+let command = 0x39;
+
+guiConnect();
+
+let cap = guiActionCapture("Test Tone: Sine Wave muss aktiv sein. Mehrere Frequenzen nacheinander waehlen, z.B. 16KHz, 10KHz, 1KHz, 20Hz.", 90000, 6000, 45000);
+
+let cmd39Writes = writesByCommand(cap, command);
+let offsets = changingOffsetsAcrossWrites(cmd39Writes);
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 30, 0x40);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/cmd39-writes.txt", cmd39Writes);
+saveText("${base}/cmd39-payloads.txt", payloadSeries(cmd39Writes));
+saveText("${base}/cmd39-changing-offsets.txt", offsets);
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+
+print("testtone-sine-frequency-fresh done");
+print("Saved to: ${base}");
+print(offsets);
+print(last);

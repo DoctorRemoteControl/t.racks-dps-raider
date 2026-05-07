@@ -1,0 +1,12 @@
+tag=ind-comp-ratio-series
+control=ratio
+command=0x30
+channel=0x03
+frames=86
+writes=43
+responses=43
+compAll=15
+seriesCount=15
+changingOffsets=[5]
+allCompChangingOffsets=[5]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x30, len=19, hex=00 01 10 30 03 00 00 E6 03 F3 01 00 00 00 00 2C 01 23 00}

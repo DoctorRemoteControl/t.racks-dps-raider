@@ -1,0 +1,23 @@
+// Fresh GUI capture: Test Tone source -> Analog Input.
+
+let tag = "testtone-source-analog-input-fresh";
+let base = "out/testtone/${tag}";
+let command = 0x39;
+
+guiConnect();
+
+let cap = guiActionCapture("Test Tone: zum Schluss nur Analog Input anklicken.", 90000, 1500, 8000);
+
+let cmd39Writes = writesByCommand(cap, command);
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 20, 0x40);
+
+saveText("${base}/capture.txt", cap);
+saveText("${base}/cmd39-writes.txt", cmd39Writes);
+saveText("${base}/cmd39-payloads.txt", payloadSeries(cmd39Writes));
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+
+print("testtone-source-analog-input-fresh done");
+print("Saved to: ${base}");
+print(last);

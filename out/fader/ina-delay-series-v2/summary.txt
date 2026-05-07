@@ -1,0 +1,12 @@
+tag=ina-delay-series-v2
+control=delay
+command=0x38
+channel=0x00
+frames=141
+writes=71
+responses=70
+delayAll=28
+seriesCount=28
+changingOffsets=[5, 6]
+allDelayChangingOffsets=[5, 6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x38, len=7, hex=00 01 04 38 00 00 00}

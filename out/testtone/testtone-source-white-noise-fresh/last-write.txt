@@ -1,0 +1,1 @@
+sniff{dir=PC_TO_DSP, cmd=0x39, len=6, hex=00 01 03 39 02 00}

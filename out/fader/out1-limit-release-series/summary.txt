@@ -1,0 +1,12 @@
+tag=out1-limit-release-series
+control=release
+command=0x3F
+channel=0x04
+frames=44
+writes=22
+responses=22
+limitAll=3
+seriesCount=3
+changingOffsets=[9, 10]
+allLimitChangingOffsets=[9, 10]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x3F, len=15, hex=00 01 0C 3F 04 00 00 E6 03 B7 0B 00 00 00 00}

@@ -1,0 +1,47 @@
+let tag = "ind-gate-threshold-series-v2";
+let base = "out/fader/${tag}";
+let control = "threshold";
+let command = 0x3E;
+let channel = 0x03;
+
+guiConnect();
+
+let cap = guiActionCapture(
+    "On the Gate page with InD visible, move only the InD Threshold fader slowly across several positions now.",
+    60000,
+    3000,
+    15000
+);
+
+let last = lastWriteExcluding(cap, 0x40);
+let recent = recentWritesExcluding(cap, 60, 0x40);
+let gateAll = writesByCommand(cap, command);
+let series = writesByCommandAndChannel(cap, command, channel);
+
+let frames = cap.totalFrames;
+let writes = cap.writeCount;
+let responses = cap.responseCount;
+let gateAllCount = len(gateAll);
+let seriesCount = len(series);
+let offsets = changingOffsetsAcrossWrites(series);
+let allOffsets = changingOffsetsAcrossWrites(gateAll);
+
+saveText("${base}/summary.txt",
+    "tag=${tag}\ncontrol=${control}\ncommand=0x3E\nchannel=0x03\nexpectedOffset=11\nframes=${frames}\nwrites=${writes}\nresponses=${responses}\ngateAll=${gateAllCount}\nseriesCount=${seriesCount}\nchangingOffsets=${offsets}\nallGateChangingOffsets=${allOffsets}\nlastInteresting=${last}\n"
+);
+
+saveText("${base}/last-write.txt", last);
+saveText("${base}/recent-interesting-writes.txt", recent);
+saveText("${base}/gate-all-payload-series.txt", payloadSeries(gateAll));
+saveText("${base}/gate-all-changing-offsets.txt", allOffsets);
+saveText("${base}/gate-ind-payload-series.txt", payloadSeries(series));
+saveText("${base}/gate-ind-changing-offsets.txt", offsets);
+saveText("${base}/gate-ind-u16-at-5.txt", u16Series(series, 5));
+saveText("${base}/gate-ind-u16-at-7.txt", u16Series(series, 7));
+saveText("${base}/gate-ind-u16-at-9.txt", u16Series(series, 9));
+saveText("${base}/gate-ind-u16-at-11.txt", u16Series(series, 11));
+
+print("done");
+print("saved=${base}");
+print("seriesCount=${seriesCount}");
+print(offsets);

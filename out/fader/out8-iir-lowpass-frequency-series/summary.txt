@@ -1,0 +1,12 @@
+tag=out8-iir-lowpass-frequency-series
+control=lowpass_frequency
+command=0x31
+channel=0x0B
+expectedOffsets=5,6
+frames=342
+writes=171
+responses=171
+allCommandCount=106
+seriesCount=106
+changingOffsets=[5, 6]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x31, len=9, hex=00 01 06 31 0B 00 00 14 0A}

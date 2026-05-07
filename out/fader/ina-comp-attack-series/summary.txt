@@ -1,0 +1,12 @@
+tag=ina-comp-attack-series
+control=attack
+command=0x30
+channel=0x00
+frames=44
+writes=22
+responses=22
+compAll=4
+seriesCount=4
+changingOffsets=[7, 8]
+allCompChangingOffsets=[7, 8]
+lastInteresting=sniff{dir=PC_TO_DSP, cmd=0x30, len=19, hex=00 01 10 30 00 00 00 E6 03 F3 01 00 00 00 00 AA 00 23 00}

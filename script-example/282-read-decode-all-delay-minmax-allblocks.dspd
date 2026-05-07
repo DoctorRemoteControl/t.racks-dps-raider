@@ -1,0 +1,293 @@
+# Decode FIR408 delay readback locations for InA..InD and Out1..Out8 by controlled min -> max writes.
+
+let base = "out/read-decode/all-delay-minmax";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+let inaMin = "00 01 04 38 00 00 00";
+let inaMax = "00 01 04 38 00 00 FF";
+let inbMin = "00 01 04 38 01 00 00";
+let inbMax = "00 01 04 38 01 00 FF";
+let incMin = "00 01 04 38 02 00 00";
+let incMax = "00 01 04 38 02 00 FF";
+let indMin = "00 01 04 38 03 00 00";
+let indMax = "00 01 04 38 03 00 FF";
+let out1Min = "00 01 04 38 04 00 00";
+let out1Max = "00 01 04 38 04 00 FF";
+let out2Min = "00 01 04 38 05 00 00";
+let out2Max = "00 01 04 38 05 00 FF";
+let out3Min = "00 01 04 38 06 00 00";
+let out3Max = "00 01 04 38 06 00 FF";
+let out4Min = "00 01 04 38 07 00 00";
+let out4Max = "00 01 04 38 07 00 FF";
+let out5Min = "00 01 04 38 08 00 00";
+let out5Max = "00 01 04 38 08 00 FF";
+let out6Min = "00 01 04 38 09 00 00";
+let out6Max = "00 01 04 38 09 00 FF";
+let out7Min = "00 01 04 38 0A 00 00";
+let out7Max = "00 01 04 38 0A 00 FF";
+let out8Min = "00 01 04 38 0B 00 00";
+let out8Max = "00 01 04 38 0B 00 FF";
+
+saveText("${base}/pattern-summary.txt",
+    "Delay min/max read decode for InA..InD and Out1..Out8\nmin: raw=0 = 0.000 ms\nmax: raw=65280 = 680.000 ms\nInA min=${inaMin}\nInA max=${inaMax}\nInB min=${inbMin}\nInB max=${inbMax}\nInC min=${incMin}\nInC max=${incMax}\nInD min=${indMin}\nInD max=${indMax}\nOut1 min=${out1Min}\nOut1 max=${out1Max}\nOut2 min=${out2Min}\nOut2 max=${out2Max}\nOut3 min=${out3Min}\nOut3 max=${out3Max}\nOut4 min=${out4Min}\nOut4 max=${out4Max}\nOut5 min=${out5Min}\nOut5 max=${out5Max}\nOut6 min=${out6Min}\nOut6 max=${out6Max}\nOut7 min=${out7Min}\nOut7 max=${out7Max}\nOut8 min=${out8Min}\nOut8 max=${out8Max}\n"
+);
+
+for (let i in 0..28) {
+    write(inaMin);
+    sleep(120);
+    let before = readBlock(i);
+    write(inaMax);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/ina/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/ina/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/ina/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/ina/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/ina/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/ina/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("ina changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(inbMin);
+    sleep(120);
+    let before = readBlock(i);
+    write(inbMax);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/inb/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/inb/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/inb/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/inb/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/inb/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/inb/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("inb changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(incMin);
+    sleep(120);
+    let before = readBlock(i);
+    write(incMax);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/inc/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/inc/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/inc/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/inc/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/inc/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/inc/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("inc changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(indMin);
+    sleep(120);
+    let before = readBlock(i);
+    write(indMax);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/ind/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/ind/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/ind/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/ind/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/ind/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/ind/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("ind changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out1Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out1Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out1/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out1/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out1/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out1/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out1/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out1/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out1 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out2Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out2Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out2/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out2/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out2/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out2/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out2/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out2/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out2 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out3Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out3Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out3/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out3/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out3/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out3/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out3/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out3/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out3 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out4Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out4Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out4/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out4/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out4/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out4/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out4/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out4/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out4 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out5Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out5Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out5/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out5/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out5/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out5/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out5/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out5/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out5 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out6Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out6Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out6/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out6/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out6/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out6/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out6/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out6/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out6 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out7Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out7Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out7/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out7/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out7/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out7/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out7/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out7/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out7 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+for (let i in 0..28) {
+    write(out8Min);
+    sleep(120);
+    let before = readBlock(i);
+    write(out8Max);
+    sleep(120);
+    let after = readBlock(i);
+    let offsets = changedOffsets(before.payload, after.payload);
+    if (len(offsets) > 0) {
+        saveText("${base}/out8/block-${i}-before.hex.txt", before.payloadHex);
+        saveText("${base}/out8/block-${i}-after.hex.txt", after.payloadHex);
+        saveText("${base}/out8/block-${i}-changed-offsets.txt", offsets);
+        saveText("${base}/out8/block-${i}-diff-bytes.txt", diffBytes(before.payload, after.payload));
+        saveText("${base}/out8/block-${i}-diff-u16le.txt", diffU16le(before.payload, after.payload));
+        saveDiffReport("${base}/out8/block-${i}-diff-report.txt", before.payload, after.payload);
+        print("out8 changed-block ${i}");
+        print(offsets);
+    }
+}
+
+# Restore the alternating min/max state shown in the user's delay screenshot.
+write(inaMin);
+write(inbMax);
+write(incMin);
+write(indMax);
+write(out1Min);
+write(out2Max);
+write(out3Min);
+write(out4Max);
+write(out5Min);
+write(out6Max);
+write(out7Min);
+write(out8Max);
+
+print("all-delay-minmax-read-decode-done");
