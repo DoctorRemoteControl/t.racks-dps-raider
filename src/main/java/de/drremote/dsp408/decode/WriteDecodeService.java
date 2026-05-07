@@ -333,21 +333,26 @@ public final class WriteDecodeService {
     }
 
     private WriteDecodeResult decodeLimiter(byte[] payload, String commandHex) {
-        requireLen(payload, 13, "limiter");
+        requireLen(payload, 15, "limiter");
         int output = u8(payload, 4);
-        int attack = u16le(payload, 5);
-        int release = u16le(payload, 7);
-        int unknown = u16le(payload, 9);
-        int threshold = u16le(payload, 11);
+        int ratio = u16le(payload, 5);
+        int attack = u16le(payload, 7);
+        int release = u16le(payload, 9);
+        int knee = u16le(payload, 11);
+        int threshold = u16le(payload, 13);
         List<String> details = new ArrayList<>(List.of(
                 "channel       = " + lib.outputName(output),
+                "ratio_raw     = " + ratio + " -> " + lib.compressorRatio(ratio),
                 "attack_raw    = " + attack + " -> " + (attack + 1) + " ms",
                 "release_raw   = " + release + " -> " + (release + 1) + " ms",
-                "unknown_raw   = " + unknown,
+                "knee_raw      = " + knee + " -> " + knee + " dB",
                 "threshold_raw = " + threshold + " -> " + format1((threshold / 2.0) - 90.0) + " dB"
         ));
-        if (payload.length > 13) {
-            details.add("extra_tail    = " + hexBytes(payload, 13, payload.length - 13));
+        if (u8(payload, 6) != 0 || u8(payload, 12) != 0) {
+            details.add("pad_warning   = expected ratio/knee high bytes at offsets 6/12 to be 00");
+        }
+        if (payload.length > 15) {
+            details.add("extra_tail    = " + hexBytes(payload, 15, payload.length - 15));
         }
 
         return match(commandHex, "$.parameters.limiter.write",

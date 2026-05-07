@@ -1,0 +1,16 @@
+let tag = "current-out8-peq9-frequency";
+let base = "out/read-decode/${tag}";
+
+connect();
+resetSession();
+ensureSession();
+handshake();
+
+let block = readBlock(0x1C);
+let raw = u16le(block.payload, 0x0F);
+
+saveText("${base}/block-1c.hex.txt", block.payloadHex);
+saveText("${base}/out8-peq9-frequency-raw.txt", raw);
+
+print("out8-peq9-frequency-raw=${raw}");
+print("expect 296 if GUI-write raw was stored, 300 if DspLib-408 frequency high endpoint is stored");
